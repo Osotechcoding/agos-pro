@@ -21,14 +21,11 @@ require_once "Helper/helper.php";
   class="page-header-fixed sidemenu-closed-hidelogo page-content-white page-md header-white dark-sidebar-color logo-dark">
   <div class="page-wrapper">
     <!-- start header -->
-
     <?php include_once "Inc/Header.php" ?>
-    <!-- end header -->
-    <!-- start page container -->
     <div class="page-container">
       <!-- start sidebar menu -->
       <?php include_once "Inc/TopSidebar.php"; ?>
-      <!-- end sidebar menu -->
+
       <!-- start page content -->
       <div class="page-content-wrapper">
         <div class="page-content">
@@ -76,7 +73,6 @@ require_once "Helper/helper.php";
                         <tr class="odd gradeX">
                           <td class="center">osotech@gmail.com</td>
                           <td class="center">1192.158.1.38.</td>
-
                           <td class="center"><?php echo date("Y-m-d H:i:s a"); ?></td>
                           <td class="center"><?php echo date("Y-m-d H:i:s a", strtotime("+ 30 minutes")); ?></td>
                           <td class="center">
@@ -93,7 +89,6 @@ require_once "Helper/helper.php";
                             </button>
                           </td>
                         </tr>
-
                       </tbody>
                     </table>
                   </div>
