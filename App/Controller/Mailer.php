@@ -1,0 +1,132 @@
+<?php
+
+// namespace App\Conroller;
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+define("SIB_EMAIL_SERVER", "smtp-relay.sendinblue.com");
+define("SIB_ACC_USER", "osotechcoding@gmail.com");
+define("SIB_ACC_PASS", "67E50vcHAy3BwQZd");
+define('SIB_API_SECRET_KEY', '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');
+require 'vendor/autoload.php';
+function sendConfirmationEmailToNewCustomer($fullname, $email, $login_password, $tokenExp, $link)
+{
+  $msg = '';
+  $phpmailer = new PHPMailer(true);
+  $phpmailer->SMTPDebug = 0;
+  $phpmailer->isSMTP();
+  $phpmailer->Host = 'smtp.mailtrap.io';
+  $phpmailer->SMTPAuth = true;
+  $phpmailer->Port = 2525;
+  $phpmailer->Username = '71f8d31ac958eb';
+  $phpmailer->Password = '5479f82c1922d6';
+  $phpmailer->setFrom('admin@agos.com', 'Admin');
+  $phpmailer->addAddress($email, $fullname);
+  $phpmailer->Subject = 'User Registration Activation Email';
+  $phpmailer->isHTML(true);         //Set email format to HTML
+  $phpmailer->Body    =
+    "Hi, $fullname,\r\n  <b />Thank you for your Registration 
+    \r\n Click this link to activate your account. <a href='" . $link . "'>" . $link . "</a> \r\n \r\n Login Details:\r\n \r\n Username => $email \r\n Password => $login_password \r\n \r\n <b />This link will expire at $tokenExp";
+  $phpmailer->AltBody =
+    "Hi, $fullname,\r\n Thank you for your Registration 
+    \r\n Click this link to activate your account. <a href='" . $link . "'>" . $link . "</a> \r\n \r\n Login Details: Username => $email \r\n Password => $login_password \r\n \r\n This link will expire at $tokenExp";
+  if ($phpmailer->send()) {
+    return true;
+  } else {
+    $msg = "Sorry, Message could not be sent. Mailer Error: {$phpmailer->ErrorInfo}";
+    $msg = 'Message sent! Thanks for contacting us.';
+  }
+}
+
+function sendLoginDetailEmailToNewStaff($fullname, $email, $login_password, $role_type, $link)
+{
+  $msg = '';
+  $phpmailer = new PHPMailer(true);
+  $phpmailer->SMTPDebug = 0;
+  $phpmailer->isSMTP();
+  $phpmailer->Host = 'smtp.mailtrap.io';
+  $phpmailer->SMTPAuth = true;
+  $phpmailer->Port = 2525;
+  $phpmailer->Username = '71f8d31ac958eb';
+  $phpmailer->Password = '5479f82c1922d6';
+  $phpmailer->setFrom('admin@agos.com', 'Admin');
+  $phpmailer->addAddress($email, $fullname);
+  $phpmailer->addAddress("osoetchcoding@gmail.com", "Osotech");
+  $phpmailer->Subject = 'Your AGOS Hotel Access Details';
+  $phpmailer->isHTML(true);   //Set email format to HTML
+  $phpmailer->Body    =
+    "Hi, $fullname,\r\n  <b />Ago Hotel Created an account your as $role_type 
+    \r\n Click the Link below to Access your Dashboard. \r\n \r\n <a href='" . $link . "'>" . $link . "</a> Login Details:\r\n \r\n Username => $email \r\n Password => $login_password \r\n \r\n Best Regards <b /> <b>AGOS Hotel</b>.";
+  $phpmailer->AltBody =
+    "Hi, $fullname,\r\n  <b />Ago Hotel Created an account your as $role_type 
+    \r\n Click the Link below to Access your Dashboard. \r\n \r\n <a href='" . $link . "'>" . $link . "</a> Login Details:\r\n \r\n Username => $email \r\n Password => $login_password \r\n \r\n Best Regards <b /> <b>AGOS Hotel</b>.";
+  if ($phpmailer->send()) {
+    return true;
+  } else {
+    $msg = "Sorry, Message could not be sent. Mailer Error: {$phpmailer->ErrorInfo}";
+    $msg = 'Message sent! Thanks for contacting us.';
+  }
+}
+
+function sendReservationBookingInfoToCustomer($name, $email, $ref_code, $checkIn, $checkOut)
+{
+  $message_body = "<b>Dear " . ucfirst($name) . "</b>,\r\n\r\n 
+Thank you for your Booking. \r\n\r\n 
+This email is to confirm your booking at AGO's Hotel from " . date('D M jS Y', strtotime($checkIn)) . " to " . date('D M jS Y', strtotime($checkOut)) . ". Payment via Your Online Wallet Token. \r\n\r\n
+Booking Reference Code: <b>$ref_code</b>\r\n\r\n
+Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGO's Hotel</b>.";
+  $msg = '';
+  $phpmailer = new PHPMailer(true);
+  $phpmailer->SMTPDebug = 0;
+  $phpmailer->isSMTP();
+  $phpmailer->Host = 'smtp.mailtrap.io';
+  $phpmailer->SMTPAuth = true;
+  $phpmailer->Port = 2525;
+  $phpmailer->Username = '71f8d31ac958eb';
+  $phpmailer->Password = '5479f82c1922d6';
+  $phpmailer->setFrom('admin@agos.com', 'Admin');
+  $phpmailer->addAddress($email, $name);
+  $phpmailer->addAddress("osoetchcoding@gmail.com", "Osotech");
+  $phpmailer->Subject = 'Room Reservation at AGOS Hotel on ' . date("Y-m-d", strtotime($checkIn));
+  $phpmailer->isHTML(true);   //Set email format to HTML
+  $phpmailer->Body    = $message_body;
+  $phpmailer->AltBody = $message_body;
+  if ($phpmailer->send()) {
+    return true;
+  } else {
+    $msg = "Sorry, Message could not be sent. Mailer Error: {$phpmailer->ErrorInfo}";
+    $msg = 'Message sent! Thanks for contacting us.';
+  }
+}
+
+function sendTopUpWalletNotificationToCustomer($name, $email, $amount, $date)
+{
+  $message_body = "<b>Dear " . $name . "</b>,\r\n\r\n 
+This is to notify you that  your wallet at AGOS Hotel was Top-Up with &#8358; " . number_format($amount, 2) . " \r\n\r\n on $date
+Recharge Amount: <b>" . number_format($amount, 2) . "</b>\r\n\r\n
+Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGO's Hotel</b>.";
+  $msg = '';
+  $phpmailer = new PHPMailer(true);
+  $phpmailer->SMTPDebug = 0;
+  $phpmailer->isSMTP();
+  $phpmailer->Host = 'smtp.mailtrap.io';
+  $phpmailer->SMTPAuth = true;
+  $phpmailer->Port = 2525;
+  $phpmailer->Username = '71f8d31ac958eb';
+  $phpmailer->Password = '5479f82c1922d6';
+  $phpmailer->setFrom('admin@agos.com', 'Admin');
+  $phpmailer->addAddress($email, $name);
+  $phpmailer->addAddress("osoetchcoding@gmail.com", "Osotech");
+  $phpmailer->Subject = 'Wallet Top-Up Notification';
+  $phpmailer->isHTML(true);   //Set email format to HTML
+  $phpmailer->Body    = $message_body;
+  $phpmailer->AltBody = $message_body;
+  if ($phpmailer->send()) {
+    return true;
+  } else {
+    $msg = "Sorry, Message could not be sent. Mailer Error: {$phpmailer->ErrorInfo}";
+    $msg = 'Message sent! Thanks for contacting us.';
+  }
+}
