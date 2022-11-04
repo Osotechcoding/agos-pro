@@ -3,7 +3,7 @@
 
 <head>
   <?php include_once "Inc/MetaTag.php"; ?>
-  <title>AGO's Hotel</title>
+  <title>Forgot Password Link</title>
   <!-- icons -->
   <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="assets/plugins/iconic/css/material-design-iconic-font.min.css">
@@ -45,6 +45,7 @@
     </div>
   </div>
   <!-- start js include path -->
+
   <script src="assets/plugins/jquery/jquery.min.js"></script>
   <!-- bootstrap -->
   <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
