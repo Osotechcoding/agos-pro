@@ -372,4 +372,93 @@ class Customer
     return $this->response;
     $this->dbh = null;
   }
+
+  public function sendCustomerPasswordResetLink($data)
+  {
+    $email = $this->Core->sanitise_string($data['link_email']);
+    if ($this->Core->isEmptyStr($email)) {
+      $this->response = $this->Alert->alertMessage("WARNING:", "Your email address is required!", "danger");
+    } elseif (!$this->Core->is_valid_email_address($email)) {
+      $this->response = $this->Alert->alertMessage("WARNING:", "Invalid email address!", "danger");
+    } else {
+      //check user details via email
+      $sql = "SELECT * FROM `{$this->table}` WHERE email=? LIMIT 1";
+      $this->stmt = $this->dbh->prepare($sql);
+      $this->stmt->execute([$email]);
+      if ($this->stmt->rowCount() == '1') {
+        //get details 
+        $customer_data = $this->stmt->fetch();
+        $reset_token = $this->Core->generateRandomUserToken(62);
+        $link = "http://localhost/agos-pro/reset-password?email=$email&reset-token=$reset_token&user=customer";
+        try {
+          $this->dbh->beginTransaction();
+          $query = "UPDATE `{$this->table}` SET `reset_token`=? WHERE email=? LIMIT 1";
+          $this->stmt = $this->dbh->prepare($query);
+          if ($this->stmt->execute([$reset_token, $email])) {
+            if (sendCustomerPasswordResetLinkViaEmail($customer_data->fullname, $email, $link)) {
+              $this->dbh->commit();
+              $this->response = $this->Alert->alertMessage("SUCCESS:", "Password reset link was sent to <b>$email</b>. Click on the Link to reset your password!", "success");
+            }
+          }
+        } catch (PDOException $e) {
+          $this->dbh->rollBack();
+          $this->response =
+            $this->response = $this->Alert->alertMessage("SERVER ERROR", "Internal Server Error: " . $e->getMessage(), "danger");
+        }
+      } else {
+        $this->response = $this->Alert->alertMessage("WARNING:", "No account associated with this $email!", "danger");
+      }
+    }
+    return $this->response;
+    $this->dbh = null;
+  }
+
+  public function resetCustomerPassword($data)
+  {
+    $email = $this->Core->sanitise_string($data['email']);
+    $pass = $this->Core->sanitise_string($data['new_pass']);
+    $cpass = $this->Core->sanitise_string($data['cnew_pass']);
+    if ($this->Core->isEmptyStr($email) || $this->Core->isEmptyStr($pass) || $this->Core->isEmptyStr($cpass)) {
+      $this->response = $this->Alert->alertMessage("WARNING:", "Invalid Submission", "danger");
+    } else if (strlen($pass) <= 6) {
+      $this->response =  $this->Alert->alertMessage("WARNING:", "Password should be atleast seven (7) characters long!", "danger");
+    } else if ($pass !== $cpass) {
+      $this->response = $this->Alert->alertMessage("WARNING:", "Password and Confirm password do not match!", "danger");
+    } else {
+      //update the password and log the user out
+      try {
+        $this->dbh->beginTransaction();
+        $hashed_pass = $this->Core->encryptUserPassword($pass);
+        $sql_update = "UPDATE `{$this->table}` SET `password`=? WHERE `email`=? LIMIT 1";
+        $this->stmt = $this->dbh->prepare($sql_update);
+        if ($this->stmt->execute([$hashed_pass, $email])) {
+          $this->dbh->commit();
+          $this->response = $this->Alert->alertMessage("SUCCESS:", "Password updated successfully, Redirecting...", "success") . "<script>
+    setTimeout(() => {
+      window.location.href = 'login';
+    }, 3500);
+    </script>";
+        }
+      } catch (PDOException $e) {
+        $this->dbh->rollBack();
+        $this->response = $this->response = $this->Alert->alertMessage("SERVER ERROR", "Internal Server Error: " . $e->getMessage(), "danger");
+      }
+    }
+    return $this->response;
+    $this->dbh = null;
+  }
+
+  public function verifiedResetTokenAndEmail($email, $token)
+  {
+    $sql = "SELECT * FROM `{$this->table}` WHERE `email`=? AND `reset_token`=? LIMIT 1";
+    $this->stmt = $this->dbh->prepare($sql);
+    $this->stmt->execute([$email, $token]);
+    if ($this->stmt->rowCount() == '1') {
+      $this->response = true;
+    } else {
+      $this->response = false;
+    }
+    return $this->response;
+    $this->dbh = null;
+  }
 }

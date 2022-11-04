@@ -101,6 +101,18 @@ if ($request_method === "POST") {
           echo $result;
         }
         break;
+      case 'send_forgot_pwd_link':
+        $result = $Customer->sendCustomerPasswordResetLink($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
+      case 'update_forgot_pwd_now':
+        $result = $Customer->resetCustomerPassword($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
       case 'submit_self_booking_form':
         $result = $Customer->bookWithWalletCredit($_POST);
         if ($result) {

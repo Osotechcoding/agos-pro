@@ -130,3 +130,39 @@ Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGO's Hote
     $msg = 'Message sent! Thanks for contacting us.';
   }
 }
+
+function
+sendCustomerPasswordResetLinkViaEmail($fullname, $email, $link)
+{
+  $message_body = "Hello <b>$fullname</b>,\r\n \r\nSomebody requested a new password for the AGOS Hotel portal account associated with <b>$email</b>.\r\n \r\n
+No changes have been made to your account yet.\r\n \r\n
+You can reset your password by clicking the link below:\r\n \r\n
+<a href='" . $link . "'>" . $link . "</a>\r\n \r\n
+If you did not request a new password, please let us know immediately by replying to this email.\r\n \r\n \r\n \r\n
+Yours,\r\n \r\n
+The AGOS team";
+  $msg = '';
+  $phpmailer = new PHPMailer(true);
+  $phpmailer->SMTPDebug = 0;
+  $phpmailer->isSMTP();
+  $phpmailer->Host = 'smtp.mailtrap.io';
+  $phpmailer->SMTPAuth = true;
+  $phpmailer->Port = 2525;
+  $phpmailer->Username = '71f8d31ac958eb';
+  $phpmailer->Password = '5479f82c1922d6';
+  $phpmailer->setFrom('admin@agos.com', 'Admin');
+  $phpmailer->addAddress($email, $fullname);
+  $phpmailer->addAddress("osoetchcoding@gmail.com", "Osotech");
+  $phpmailer->Subject = 'Password Rest Notification';
+  $phpmailer->isHTML(true);   //Set email format to HTML
+  $phpmailer->Body    = $message_body;
+  $phpmailer->AltBody = $message_body;
+  if ($phpmailer->send()) {
+    return true;
+  } else {
+    $msg = "Sorry, Message could not be sent. Mailer Error: {$phpmailer->ErrorInfo}";
+    $msg = 'Message sent! Thanks for contacting us.';
+  }
+}
+
+// 

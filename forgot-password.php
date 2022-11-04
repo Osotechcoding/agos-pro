@@ -20,15 +20,15 @@
     <div class="container-login100 page-background">
       <div class="wrap-login100">
         <form class="login100-form validate-form" id="passwordResetForm">
-          <span class="login100-form-title p-b-34 p-t-27">
+          <span class="login100-form-title p-b-34">
             Forgot Password
           </span>
-          <h6 class="text-white">Enter your email, reset link will be sent to your inbox</h6>
-          <span id="response" class="text-center mt-3 text-lowercase"></span>
+          <h6 class="text-warning">Enter your email, reset link will be sent to your inbox</h6>
+          <div id="response" class="text-center mt-1"></div>
           <input type="hidden" name="action" value="send_forgot_pwd_link">
-          <div class="wrap-input100 validate-input" data-validate="Enter username">
-            <input autocomplete="off" class="input100" type="text" name="link_email" placeholder=" Email">
-            <span class="focus-input100" data-placeholder="&#xf207;"></span>
+          <div class="form-group mt-3 mb-3">
+            <input autocomplete="off" class="form-control form-control-lg mb-3" type="text" name="link_email"
+              placeholder="Enter Email address">
           </div>
           <div class="container-login100-form-btn">
             <button class="login100-form-btn _loadingBtn__" type="submit">
@@ -52,7 +52,7 @@
   <!-- send_forgot_pwd_link -->
   <script>
   $(document).ready(function() {
-    const formData = $("#LoginFormData");
+    const formData = $("#passwordResetForm");
     formData.on("submit", (event) => {
       event.preventDefault();
       $("._loadingBtn__").html("Loading...").attr("disabled", true);
@@ -62,23 +62,8 @@
           $("#response").html(res);
         }, 1000);
       })
-
-    })
-
-    var showPass = 0;
-    $('.btn-show-pass').on('click', function() {
-      if (showPass == 0) {
-        $(this).next('input').attr('type', 'text');
-        $(this).addClass('active');
-        showPass = 1;
-      } else {
-        $(this).next('input').attr('type', 'password');
-        $(this).removeClass('active');
-        showPass = 0;
-      }
-
     });
-  })
+  });
   </script>
 </body>
 
