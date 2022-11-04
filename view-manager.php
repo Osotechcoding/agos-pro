@@ -20,13 +20,11 @@ require_once "Helper/helper.php";
     <!-- start header -->
 
     <?php include_once "Inc/Header.php" ?>
-    <!-- end header -->
-    <!-- start page container -->
+
     <div class="page-container">
       <!-- start sidebar menu -->
       <?php include_once "Inc/TopSidebar.php"; ?>
-      <!-- end sidebar menu -->
-      <!-- start page content -->
+
       <div class="page-content-wrapper">
         <div class="page-content">
           <div class="page-bar">
@@ -114,8 +112,15 @@ require_once "Helper/helper.php";
                                   class="badge badge-info badge-pill badge-md"><?php echo $staff->created_at; ?></span>
                               </td>
                               <td class="center">
-                                <a href="" class="btn btn-circle deepPink-bgcolor btn-sm">Suspend</a>
-
+                                <?php if ($staff->status == '0') { ?>
+                                <button type="button" data-id="<?php echo $staff->id; ?>" data-action="Suspend"
+                                  class="btn btn-circle deepPink-bgcolor btn-sm suspend_btn">Suspend</button>
+                                <?php
+                                    } else { ?>
+                                <button type="button" data-id="<?php echo $staff->id; ?>" data-action="Unsuspend"
+                                  class="btn btn-circle btn-success btn-sm unsuspend_btn">UnSuspend</button>
+                                <?php
+                                    } ?>
                               </td>
                             </tr>
                             <?php
@@ -185,6 +190,16 @@ require_once "Helper/helper.php";
     <?php include_once "Inc/Footer.php"; ?>
   </div>
   <?php include_once "Inc/DatatableFooterScript.php"; ?>
+  <script>
+  $(document).ready(function() {
+    let unsuspend_btn = $(".unsuspend_btn");
+    unsuspend_btn.on("click", function() {
+      let staff_id = $(this).data("id");
+      let action = $(this).data("action");
+      alert(staff_id + " " + action);
+    })
+  })
+  </script>
 </body>
 
 </html>

@@ -108,6 +108,18 @@ class Room
     }
   }
 
+  public function getAllBookings()
+  {
+    $sql = "SELECT * FROM `booking_tbl` ORDER BY created_at DESC LIMIT 200";
+    $this->stmt = $this->dbh->prepare($sql);
+    $this->stmt->execute();
+    if ($this->stmt->rowCount() > 0) {
+      $this->response = $this->stmt->fetchAll();
+      return $this->response;
+      $this->dbh = null;
+    }
+  }
+
   public function getAllRecentBooking()
   {
     $sql = "SELECT * FROM `booking_tbl` WHERE DATE(`created_at`)>= DATE(CURRENT_DATE()- INTERVAL 3 DAY) ORDER BY created_at DESC LIMIT 5";
