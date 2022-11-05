@@ -1,19 +1,14 @@
 <?php
 require_once "Helper/customerHelper.php";
-
-
-// echo ;
-
 if (isset($_REQUEST['roomId']) && isset($_REQUEST['action']) && isset($_REQUEST['cid']) && !$Core->isEmptyStr($_REQUEST['roomId']) && !$Core->isEmptyStr($_REQUEST['cid'])) {
   $roomId = $Core->sanitise_string($_REQUEST['roomId']);
   $cid = $Core->sanitise_string($_REQUEST['cid']);
   $room_details = $Room->getRoomById($roomId);
-  $customer_wallet_details = $Customer->getCustomerWalletDetailsById($cid);
+  $customer_wallet_details = $Customer->getCustomerWalletDetailsById($loggerId);
 } else {
   @header("Location: ./booking-arena");
   exit();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">

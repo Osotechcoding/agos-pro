@@ -72,17 +72,16 @@ require_once "Helper/customerHelper.php";
                           }
                           ?>
                     </span>
-
                     <div>
                       <p>
-
                       <h3> Per Night: <strong><span class="label label-danger label-lg">&#8358;
                             <?php echo number_format($room->price, 2); ?> </span></strong>
                       </h3>
                       </p>
                     </div>
                     <div class="profile-userbuttons">
-                      <a href="self-booking?roomId=<?php echo $room->id; ?>&cid=6&action=book-room"><button
+                      <a
+                        href="self-booking?roomId=<?php echo $room->id; ?>&cid=<?php echo $loggerId; ?>&action=book-room"><button
                           class="btn btn-circle deepPink-bgcolor btn-md">Book Now</button></a>
                     </div>
                   </div>

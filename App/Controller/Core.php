@@ -44,14 +44,14 @@ class Core
     return $this->response;
   }
 
-  public static function web_root(): string
+  public function web_root()
   {
     return "http://localhost/agos-pro/";
   }
 
-  public static function redirect_root($flink)
+  public function redirect_root($flink)
   {
-    header("Location: " . self::web_root() . $flink);
+    header("Location: " . $this->web_root() . $flink);
     exit();
   }
 

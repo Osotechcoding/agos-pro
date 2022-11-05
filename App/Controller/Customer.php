@@ -198,7 +198,7 @@ class Customer
     $this->dbh = null;
   }
 
-  public function register(array $data)
+  public function customerOnlineRegistration(array $data)
   {
     if (is_array($data)) {
       if (array_key_exists('agos_tokens', $data)) {
@@ -209,28 +209,26 @@ class Customer
         $gender = $this->Core->sanitise_string($data['gender']);
         $address = $this->Core->sanitise_string($data['address']);
         $city = $this->Core->sanitise_string($data['city_state']);
-        $agos_token = $this->Core->sanitise_string($data['agos_tokens']);
         //check for empty values
         if ($this->Core->isEmptyStr($email) || $this->Core->isEmptyStr($fname)) {
-          $this->response = $this->Alert->flashMessage("AGOS Says", "Invalid Submission, All feilds are required!", "error", "top-right");
+          $this->response = $this->Alert->alertMessage("WARNING:", "Invalid Submission!", "danger");
         } else if (!$this->Core->is_valid_email_address($email)) {
-          $this->response = $this->Alert->flashMessage("AGOS Says", "Your email Address is Not valid!", "error", "top-right");
+          $this->response = $this->Alert->alertMessage("WARNING:", "Invalid email address!", "danger");
         } else if ($this->Core->userDataExisted("customers", "email", $email)) {
-          $this->response = $this->Alert->flashMessage("AGOS Says", "$email already exists", "error", "top-right");
+          $this->response = $this->Alert->alertMessage("WARNING:", "$email already exists", "danger");
         } else {
           //create all the neccesary details
           $account_bonus = (float)(30000.00); //N30,000.00 
           $verification_code = $this->Core->generateRandomUserToken(100);
-          $login_pass = $this->Core->generateRandomUserToken(8);
+          $login_pass = $this->Core->generateRandomUserToken(10);
           //convert the random generated password to hash
           $hashed_pass = $this->Core->encryptUserPassword($login_pass);
           $fullName = $fname . " " . $lname;
           $status = 0;
           $verified = 0;
-          $exp_name = explode("@", $email);
-          $username = $exp_name[0];
+          $username = $lname;
           $created_at = date("Y-m-d");
-          $link = "http://localhost/agos-pro/account-activation?email=$email&token=$verification_code&user=new-customer";
+          $link = $this->Core->web_root() . "account-activation?email=$email&token=$verification_code&user=new-customer";
           $tokenExp = date("Y-m-d H:i:s", strtotime("+ 10 days"));
           //!link expires in 10 days
           //let create the user table 
@@ -248,8 +246,75 @@ class Customer
               $query = "INSERT INTO `wallet_tbl` (customer_id,balance,last_recharge_date,`status`,created_at) VALUES (?,?,?,?,?);";
               $this->stmt = $this->dbh->prepare($query);
               if ($this->stmt->execute([$newClientId, $account_bonus, $last_recharge_date, $status, $created_at])) {
-                if (sendConfirmationEmailToNewCustomer($fname . $lname, $email, $login_pass, $tokenExp, $link) == 'Sent') {
-                  $this->response = $this->Alert->flashMessage("AGOS Says", "Customer Registration was successful, activation mail was sent to $email. Click the link on the message to activate your account!", "success", "top-right") . $this->Core->pageReload();
+                if (sendConfirmationEmailToNewCustomer($fullName, $email, $login_pass, $tokenExp, $link)) {
+                  $this->dbh->commit();
+                  $this->response = $this->Alert->alertMessage("SUCCESS:", " Registration was successful, activation mail was sent to $email. Click the link on the message to activate your account!", "success") . $this->Core->accountActivationRedirect("login");
+                }
+              }
+            }
+          } catch (PDOException $e) {
+            $this->dbh->rollBack();
+            $this->response =
+              $this->response = $this->Alert->alertMessage("WARNING:", "Internal Server Error: " . $e->getMessage(), "danger");
+          }
+        }
+      } else {
+        $this->response = $this->Alert->alertMessage("WARNING:", "Unauthorized Access !", "danger");
+      }
+      return $this->response;
+      $this->dbh = null;
+    }
+  }
+  public function register(array $data)
+  {
+    if (is_array($data)) {
+      if (array_key_exists('agos_tokens', $data)) {
+        $email = $this->Core->sanitise_string($data['email']);
+        $fname = $this->Core->sanitise_string($data['first_name']);
+        $lname = $this->Core->sanitise_string($data['last_name']);
+        $phone = $this->Core->sanitise_string($data['mobile']);
+        $gender = $this->Core->sanitise_string($data['gender']);
+        $address = $this->Core->sanitise_string($data['address']);
+        $city = $this->Core->sanitise_string($data['city_state']);
+        //check for empty values
+        if ($this->Core->isEmptyStr($email) || $this->Core->isEmptyStr($fname)) {
+          $this->response = $this->Alert->flashMessage("AGOS Says", "Invalid Submission, All feilds are required!", "error", "top-right");
+        } else if (!$this->Core->is_valid_email_address($email)) {
+          $this->response = $this->Alert->flashMessage("AGOS Says", "Your email Address is Not valid!", "error", "top-right");
+        } else if ($this->Core->userDataExisted("customers", "email", $email)) {
+          $this->response = $this->Alert->flashMessage("AGOS Says", "$email already exists", "error", "top-right");
+        } else {
+          //create all the neccesary details
+          $account_bonus = (float)(30000.00); //N30,000.00 
+          $verification_code = $this->Core->generateRandomUserToken(100);
+          $login_pass = $this->Core->generateRandomUserToken(10);
+          //convert the random generated password to hash
+          $hashed_pass = $this->Core->encryptUserPassword($login_pass);
+          $fullName = $fname . " " . $lname;
+          $status = 0;
+          $verified = 0;
+          $username = $lname;
+          $created_at = date("Y-m-d");
+          $link = $this->Core->web_root() . "account-activation?email=$email&token=$verification_code&user=new-customer";
+          $tokenExp = date("Y-m-d H:i:s", strtotime("+ 10 days"));
+          //!link expires in 10 days
+          //let create the user table 
+          try {
+            $this->dbh->beginTransaction();
+            $sql = "INSERT INTO `customers` (fullname,email,`password`,username,verified,`address`,phone,gender,state_of_origin,confirmation_code,tokenExp,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);";
+            $this->stmt = $this->dbh->prepare($sql);
+            //check if the details saved
+            if ($this->stmt->execute([$fullName, $email, $hashed_pass, $username, $verified, $address, $phone, $gender, $city, $verification_code, $tokenExp, $created_at])) {
+              //grab the last insert Id 
+              $newClientId = $this->dbh->lastInsertId();
+              $last_recharge_date = date("Y-m-d H:i:s");
+              //let create the customers wallet 
+              $status = 1;
+              $query = "INSERT INTO `wallet_tbl` (customer_id,balance,last_recharge_date,`status`,created_at) VALUES (?,?,?,?,?);";
+              $this->stmt = $this->dbh->prepare($query);
+              if ($this->stmt->execute([$newClientId, $account_bonus, $last_recharge_date, $status, $created_at])) {
+                if (sendConfirmationEmailToNewCustomer($fullName, $email, $login_pass, $tokenExp, $link)) {
+                  $this->response = $this->Alert->flashMessage("SUCCESS:", " Registration was successful, activation mail was sent to $email. Click the link on the message to activate your account!", "success", "top-right") . $this->Core->pageReload();
                   $this->dbh->commit();
                 }
               }
@@ -267,9 +332,6 @@ class Customer
       return $this->response;
       $this->dbh = null;
     }
-  }
-  public function logout($cid)
-  {
   }
 
   public function isCustomerLoggedIn()
@@ -379,7 +441,8 @@ class Customer
         $sql = "UPDATE `{$this->table}` SET `verified`=1,`confirmation_code`='' WHERE email=? AND `confirmation_code`=? LIMIT 1";
         $this->stmt = $this->dbh->prepare($sql);
         if ($this->stmt->execute([$email, $token])) {
-          $this->response = $this->Alert->alertMessage("SUCCESS:", "Email account verification successful. Click <a href='http://localhost/agos-pro/login'>Here</a> to login if you are not redirect within 5 Seconds!", "success") . $this->Core->accountActivationRedirect("login");
+          $this->response = $this->Alert->alertMessage("SUCCESS:", "Email account verification successful. Click <a href='"
+            . $this->Core->web_root() . "'login'>Here</a> to login if you are not redirect after 5 Seconds!", "success") . $this->Core->accountActivationRedirect("login");
         }
       } else {
         $this->response = $this->Core->appRedirect("login");
@@ -449,8 +512,9 @@ class Customer
       if ($this->stmt->rowCount() == '1') {
         //get details 
         $customer_data = $this->stmt->fetch();
+        //http://localhost/agos-pro/
         $reset_token = $this->Core->generateRandomUserToken(62);
-        $link = "http://localhost/agos-pro/reset-password?email=$email&reset-token=$reset_token&user=customer";
+        $link = $this->Core->web_root() . "reset-password?email=$email&reset-token=$reset_token&user=customer";
         try {
           $this->dbh->beginTransaction();
           $query = "UPDATE `{$this->table}` SET `reset_token`=? WHERE email=? LIMIT 1";

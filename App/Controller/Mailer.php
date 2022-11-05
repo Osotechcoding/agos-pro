@@ -1,19 +1,12 @@
 <?php
 
-// namespace App\Conroller;
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-define("SIB_EMAIL_SERVER", "smtp-relay.sendinblue.com");
-define("SIB_ACC_USER", "osotechcoding@gmail.com");
-define("SIB_ACC_PASS", "67E50vcHAy3BwQZd");
-define('SIB_API_SECRET_KEY', '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');
 require 'vendor/autoload.php';
 function sendConfirmationEmailToNewCustomer($fullname, $email, $login_password, $tokenExp, $link)
 {
-  $msg = '';
   $phpmailer = new PHPMailer(true);
   $phpmailer->SMTPDebug = 0;
   $phpmailer->isSMTP();
@@ -35,14 +28,12 @@ function sendConfirmationEmailToNewCustomer($fullname, $email, $login_password, 
   if ($phpmailer->send()) {
     return true;
   } else {
-    $msg = "Sorry, Message could not be sent. Mailer Error: {$phpmailer->ErrorInfo}";
-    $msg = 'Message sent! Thanks for contacting us.';
+    return false;
   }
 }
 
 function sendLoginDetailEmailToNewStaff($fullname, $email, $login_password, $role_type, $link)
 {
-  $msg = '';
   $phpmailer = new PHPMailer(true);
   $phpmailer->SMTPDebug = 0;
   $phpmailer->isSMTP();
@@ -57,16 +48,17 @@ function sendLoginDetailEmailToNewStaff($fullname, $email, $login_password, $rol
   $phpmailer->Subject = 'Your AGOS Hotel Access Details';
   $phpmailer->isHTML(true);   //Set email format to HTML
   $phpmailer->Body    =
-    "Hi, $fullname,\r\n  <b />Ago Hotel Created an account your as $role_type 
-    \r\n Click the Link below to Access your Dashboard. \r\n \r\n <a href='" . $link . "'>" . $link . "</a> Login Details:\r\n \r\n Username => $email \r\n Password => $login_password \r\n \r\n Best Regards <b /> <b>AGOS Hotel</b>.";
+    "Hi, $fullname, \r\n  <b />AGOS Hotel Created an account for you as <b> $role_type </b>\r\n with these Login Details:\r\n \r\n
+     \r\n Username => $email \r\n Password => $login_password \r\n \r\n
+    \r\n Click the Link below to Access your Dashboard. \r\n \r\n <a href='" . $link . "'>" . $link . "</a>  Best Regards <b /> <b>AGOS Hotel</b>.";
   $phpmailer->AltBody =
-    "Hi, $fullname,\r\n  <b />Ago Hotel Created an account your as $role_type 
-    \r\n Click the Link below to Access your Dashboard. \r\n \r\n <a href='" . $link . "'>" . $link . "</a> Login Details:\r\n \r\n Username => $email \r\n Password => $login_password \r\n \r\n Best Regards <b /> <b>AGOS Hotel</b>.";
+    "Hi, $fullname, \r\n  <b />AGOS Hotel Created an account for you as <b> $role_type </b>\r\n with these Login Details:\r\n \r\n
+     \r\n Username => $email \r\n Password => $login_password \r\n \r\n
+    \r\n Click the Link below to Access your Dashboard. \r\n \r\n <a href='" . $link . "'>" . $link . "</a>  Best Regards <b /> <b>AGOS Hotel</b>.";
   if ($phpmailer->send()) {
     return true;
   } else {
-    $msg = "Sorry, Message could not be sent. Mailer Error: {$phpmailer->ErrorInfo}";
-    $msg = 'Message sent! Thanks for contacting us.';
+    return false;
   }
 }
 
@@ -74,10 +66,9 @@ function sendReservationBookingInfoToCustomer($name, $email, $ref_code, $checkIn
 {
   $message_body = "<b>Dear " . ucfirst($name) . "</b>,\r\n\r\n 
 Thank you for your Booking. \r\n\r\n 
-This email is to confirm your booking at AGO's Hotel from " . date('D M jS Y', strtotime($checkIn)) . " to " . date('D M jS Y', strtotime($checkOut)) . ". Payment via Your Online Wallet Token. \r\n\r\n
+This email is to confirm your booking at AGOS Hotel from " . date('D M jS Y', strtotime($checkIn)) . " to " . date('D M jS Y', strtotime($checkOut)) . ". Payment via Your Online Wallet Token. \r\n\r\n
 Booking Reference Code: <b>$ref_code</b>\r\n\r\n
-Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGO's Hotel</b>.";
-  $msg = '';
+Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGOS Hotel</b>.";
   $phpmailer = new PHPMailer(true);
   $phpmailer->SMTPDebug = 0;
   $phpmailer->isSMTP();
@@ -96,8 +87,7 @@ Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGO's Hote
   if ($phpmailer->send()) {
     return true;
   } else {
-    $msg = "Sorry, Message could not be sent. Mailer Error: {$phpmailer->ErrorInfo}";
-    $msg = 'Message sent! Thanks for contacting us.';
+    return false;
   }
 }
 
@@ -106,8 +96,7 @@ function sendTopUpWalletNotificationToCustomer($name, $email, $amount, $date)
   $message_body = "<b>Dear " . $name . "</b>,\r\n\r\n 
 This is to notify you that  your wallet at AGOS Hotel was Top-Up with &#8358; " . number_format($amount, 2) . " \r\n\r\n on $date
 Recharge Amount: <b>" . number_format($amount, 2) . "</b>\r\n\r\n
-Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGO's Hotel</b>.";
-  $msg = '';
+Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGOS Hotel</b>.";
   $phpmailer = new PHPMailer(true);
   $phpmailer->SMTPDebug = 0;
   $phpmailer->isSMTP();
@@ -126,8 +115,7 @@ Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGO's Hote
   if ($phpmailer->send()) {
     return true;
   } else {
-    $msg = "Sorry, Message could not be sent. Mailer Error: {$phpmailer->ErrorInfo}";
-    $msg = 'Message sent! Thanks for contacting us.';
+    return false;
   }
 }
 

@@ -63,6 +63,12 @@ if ($request_method === "POST") {
           echo $result;
         }
         break;
+      case 'submit_new_customer_reg_':
+        $result = $Customer->customerOnlineRegistration($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
       case 'walkin_booking_form_submited_via_staff':
         $result = $Customer->walkInClientBooking($_POST);
         if ($result) {
