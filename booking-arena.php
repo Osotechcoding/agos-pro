@@ -93,21 +93,12 @@ require_once "Helper/customerHelper.php";
             }
             ?>
           </div>
-
         </div>
       </div>
-
     </div>
-
     <?php include_once "Inc/Footer.php"; ?>
-
   </div>
-
   <?php include_once "Inc/DatatableFooterScript.php"; ?>
-
 </body>
-
-
-
 
 </html>

@@ -47,3 +47,13 @@ CREATE TABLE `agos_hotel`.`wallet_pins_tbl` ( `id` BIGINT(20) NOT NULL AUTO_INCR
 --
 --
 CREATE TABLE `agos_hotel`.`recharge_history` ( `id` BIGINT(20) NOT NULL AUTO_INCREMENT , `customer_id` BIGINT(20) NULL , `amount` DECIMAL(10,2) NOT NULL DEFAULT '0.00' , `recharge_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `created_at` DATE NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+--
+
+-- SELECT r.id
+-- FROM `rooms_tbl` AS r
+-- WHERE NOT EXISTS (SELECT * FROM `booking_tbl` as br WHERE r.id = br.room_id
+--     AND ('checkIn' BETWEEN checkIn AND checkOut
+--       OR 'checkOut' BETWEEN checkIn AND checkOut
+--       OR checkIn BETWEEN 'checkIn' AND '2checkOut'
+--       OR checkOut BETWEEN 'checkIn' AND 'checkOut'));

@@ -153,4 +153,47 @@ The AGOS team";
   }
 }
 
-// 
+function sendBookingApproveNotificationToCustomer($status, $email, $name)
+{
+
+  switch ($status) {
+    case 'Approved':
+      $message_body = "Hello <b>$name</b>,\r\n \r\n Your Booking with AGOS Hotel was  <b>$status</b>.\r\n \r\n
+Thanks for patronizing Us.\r\n \r\n
+We are ready to serve you better 24/7
+If you did not make a booking, please let us know immediately by replying to this email.\r\n \r\n \r\n \r\n
+Yours,\r\n \r\n
+The AGOS Team";
+      break;
+    case 'Rejected':
+      $message_body = "Hello <b>$name</b>,\r\n \r\n Your Booking with AGOS Hotel was  <b>$status</b> due to some reasons that are known to the Management.\r\n \r\n
+We are so sorry for any inconvenience.\r\n \r\n
+Yours,\r\n \r\n
+The AGOS Team";
+      break;
+
+    default:
+      # code...
+      break;
+  }
+  $phpmailer = new PHPMailer(true);
+  $phpmailer->SMTPDebug = 0;
+  $phpmailer->isSMTP();
+  $phpmailer->Host = 'smtp.mailtrap.io';
+  $phpmailer->SMTPAuth = true;
+  $phpmailer->Port = 2525;
+  $phpmailer->Username = '71f8d31ac958eb';
+  $phpmailer->Password = '5479f82c1922d6';
+  $phpmailer->setFrom('admin@agos.com', 'Admin');
+  $phpmailer->addAddress($email, $name);
+  $phpmailer->addReplyTo("osoetchcoding@gmail.com", "Osotech");
+  $phpmailer->Subject = "Booking $status Notification";
+  $phpmailer->isHTML(true);   //Set email format to HTML
+  $phpmailer->Body    = $message_body;
+  $phpmailer->AltBody = $message_body;
+  if ($phpmailer->send()) {
+    return true;
+  } else {
+    return false;
+  }
+}

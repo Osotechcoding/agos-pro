@@ -150,6 +150,18 @@ if ($request_method === "POST") {
           echo $result;
         }
         break;
+      case 'approve':
+        $result = $Room->approveDisapproveCustomerBooking($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
+      case 'reject':
+        $result = $Room->approveDisapproveCustomerBooking($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
 
       default:
         # code...

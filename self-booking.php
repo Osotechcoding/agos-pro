@@ -64,9 +64,11 @@ if (isset($_REQUEST['roomId']) && isset($_REQUEST['action']) && isset($_REQUEST[
                 </div>
                 <div class="card-body" id="bar-parent">
                   <form id="selfBookingForm" class="form-horizontal">
-                    <div class="form-body">
 
+                    <div class="form-body">
+                      <div class="text-center col-md-6 offset-3" id="response-server"></div>
                       <div class="form-group row">
+
                         <label class="control-label col-md-3">Price Per Night
                         </label>
                         <div class="col-md-6">
@@ -202,7 +204,7 @@ if (isset($_REQUEST['roomId']) && isset($_REQUEST['action']) && isset($_REQUEST[
         setTimeout(() => {
           $("._loadingBtn__").html("Submit").attr("disabled", false);
           console.log(res);
-          $("#server-response").html(res);
+          $("#response-server").html(res);
         }, 1000);
       })
     });

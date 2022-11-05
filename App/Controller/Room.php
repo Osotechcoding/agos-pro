@@ -1,7 +1,4 @@
 <?php
-
-use PHPMailer\PHPMailer\PHPMailer;
-
 class Room
 {
   private PDO $dbh;
@@ -277,5 +274,65 @@ class Room
       return $this->response->total;
       $this->dbh = null;
     }
+  }
+
+  public function approveDisapproveCustomerBooking($data)
+  {
+    try {
+      $action = $this->Core->sanitise_string($data['action']);
+      $bookingId = $this->Core->sanitise_string($data['bookingId']);
+      $cid = $this->Core->sanitise_string($data['customerId']);
+      $rid = $this->Core->sanitise_string($data['rId']);
+      switch ($action) {
+        case 'approve':
+          $status = 2;
+          $status_text = "Approved";
+          break;
+        case 'reject':
+          $status = 3;
+          $status_text = "Rejected";
+          break;
+
+        default:
+          $status = 1;
+          $status_text = "Pended";
+          break;
+      }
+      $customer_data = $this->Core->getSingleData("customers", "id", $cid);
+      $booking_data = $this->Core->getSingleData("booking_tbl", "id", $bookingId);
+      //$room_data = $this->Core->getSingleData("rooms_tbl", "id", $rid);
+      $total_charge_amount = $booking_data->total_bill;
+      $this->dbh->beginTransaction();
+
+      if ($action === "reject") {
+        $this->stmt = $this->dbh->prepare("UPDATE `wallet_tbl` SET `balance`=balance+$total_charge_amount WHERE customer_id=? LIMIT 1");
+        if ($this->stmt->execute([$cid])) {
+          //update the room status
+          $this->stmt = $this->dbh->prepare("UPDATE `{$this->table}` SET `is_booked`=0 WHERE id=? LIMIT 1");
+          if ($this->stmt->execute([$rid])) {
+            $this->stmt = $this->dbh->prepare("DELETE FROM `booking_tbl` WHERE id=? LIMIT 1");
+            if ($this->stmt->execute([$bookingId])) {
+              if (sendBookingApproveNotificationToCustomer($status_text, $customer_data->email, $customer_data->fullname)) {
+                $this->dbh->commit();
+                $this->response = $this->Alert->flashMessage("SUCCESS", "Booking $status_text Successfully!", "success", "top-right") . $this->Core->pageReload();
+              }
+            }
+          }
+        }
+      } else {
+        $this->stmt = $this->dbh->prepare("UPDATE `booking_tbl` SET `is_approved`=? WHERE id=? LIMIT 1");
+        if ($this->stmt->execute([$status, $bookingId])) {
+          if (sendBookingApproveNotificationToCustomer($status_text, $customer_data->email, $customer_data->fullname)) {
+            $this->dbh->commit();
+            $this->response = $this->Alert->flashMessage("SUCCESS", "Booking $status_text Successfully!", "success", "top-right") . $this->Core->pageReload();
+          }
+        }
+      }
+    } catch (PDOException $e) {
+      $this->dbh->rollback();
+      $this->response = $this->Alert->flashMessage("ERROR", "Something went wrong!: " . $e->getMessage(), "error", "top-right");
+    }
+    return $this->response;
+    $this->dbh = null;
   }
 }

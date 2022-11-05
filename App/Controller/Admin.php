@@ -1,6 +1,5 @@
 <?php
 
-// namespace App\Conroller;
 class Admin
 {
   private PDO $dbh;
@@ -36,10 +35,8 @@ class Admin
           if (isset($data['remember_me']) && $data['remember_me'] === 'on') {
             //create and store login info to local storage
             @setcookie("agos_admin_email", $email, time() + 604800, "/");
-            @setcookie("agos_admin_pass", $password, time() + 604800, "/"); //store for 7 days
           } else {
             setcookie("agos_admin_email", '', time() - 100, "/");
-            setcookie("agos_admin_pass", '', time() - 100, "/");
           }
           $_SESSION['AGOS_ADMIN_UNIQUE_TOKEN'] = $this->Core->generateRandomUserToken(50);
           $_SESSION['AGOS_ADMIN_UNIQUE_ID'] = $rows->id;

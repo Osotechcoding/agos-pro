@@ -57,10 +57,10 @@ class Customer
             $this->response = $this->Alert->alertMessage("NOTICE:", "This account is not Verified, Verification link was sent to <b> $email</b> Click the Link to verify your account!", "danger");
           }
         } else {
-          $this->response = $this->Alert->alertMessage("WARNING:", "Account details not found!", "danger");
+          $this->response = $this->Alert->alertMessage("WARNING:", "We can't find a user with that details.!", "danger");
         }
       } else {
-        $this->response = $this->Alert->alertMessage("WARNING:", "Invalid login details!", "danger");
+        $this->response = $this->Alert->alertMessage("WARNING:", "We can't find a user with that details!", "danger");
       }
     }
     return $this->response;
@@ -87,7 +87,7 @@ class Customer
     } else {
       //create all neccesary data needed for booking
       $customer_data = self::getCustomerById($cid);
-      $ref_code = date("YmdHis") . mt_rand(1111111, 9999999) . date("dmY");
+      $ref_code = date("YmdHis") . mt_rand(1000, 9999);
       $start_datetime = new DateTime($checkIn);
       $diff = $start_datetime->diff(new DateTime($checkOut));
       $no_of_nights = $diff->d;
@@ -147,13 +147,13 @@ class Customer
     $cid = $this->Core->sanitise_string($data['customer_id']);
     //check for empty values
     if ($this->Core->isEmptyStr($room_id) || $this->Core->isEmptyStr($checkIn) || $this->Core->isEmptyStr($checkOut) || $this->Core->isEmptyStr($no_guest) || $this->Core->isEmptyStr($price) || $this->Core->isEmptyStr($cid) || $this->Core->isEmptyStr($wallet_bal)) {
-      $this->response = $this->Alert->flashMessage("AGOS Says", "Invalid Submission, All feilds are required!", "error", "top-right");
+      $this->response = $this->Alert->alertMessage("WARNING", "Invalid Submission, All feilds are required!", "danger");
     } else if ($price > $wallet_bal) {
-      $this->response = $this->Alert->flashMessage("Notice:", "Your Wallet Balance is too Low for this booking, Please recharge your wallet and try again!", "error", "top-right");
+      $this->response = $this->Alert->alertMessage("Notice:", "Your Wallet Balance is too Low for this booking, Please recharge your wallet and try again!", "danger");
     } else {
       //create all neccesary data needed for booking
       $customer_data = self::getCustomerById($cid);
-      $ref_code = date("YmdHis") . mt_rand(1111111, 9999999) . date("dmY");
+      $ref_code = date("Ymdhis") . mt_rand(111, 999);
       $start_datetime = new DateTime($checkIn);
       $diff = $start_datetime->diff(new DateTime($checkOut));
       $no_of_nights = $diff->d;
@@ -161,7 +161,7 @@ class Customer
       $payment_method = "Wallet";
       $total_bill = (float)($price * $no_of_nights);
       if ($total_bill > $wallet_bal) {
-        $this->response = $this->Alert->flashMessage("Notice:", "Wallet Balance is too Low for this reservation, Please recharge your wallet and try again!", "error", "top-right");
+        $this->response = $this->Alert->alertMessage("Notice:", "Wallet Balance is too Low for this reservation, Please recharge your wallet and try again!", "danger");
       } else {
         $time =  date("h:i:s");
         $created_at = date("Y-m-d");
@@ -182,7 +182,11 @@ class Customer
                 //send booking email to user
                 if (sendReservationBookingInfoToCustomer($customer_data->fullname, $customer_data->email, $ref_code, $checkIn, $checkOut)) {
                   $this->dbh->commit();
-                  $this->response = $this->Alert->flashMessage("SUCCESS:", "Reservation was Successful, Check your inbox at $customer_data->email for details!", "success", "top-right");
+                  $this->response = $this->Alert->alertMessage("SUCCESS:", "Reservation was Successful, Check your inbox at $customer_data->email for details!", "success") . "<script>
+                  setTimeout(()=>{
+                    window.location.href='user-dashboard';
+                  },5000);
+                  </script>";
                 }
               }
             }
@@ -190,7 +194,7 @@ class Customer
         } catch (PDOException $e) {
           $this->dbh->rollBack();
           $this->response =
-            $this->response = $this->Alert->flashMessage("AGOS Says", "Internal Server Error: " . $e->getMessage(), "error", "top-right");
+            $this->response = $this->Alert->alertMessage("WARNING", "Internal Server Error: " . $e->getMessage(), "danger");
         }
       }
     }
@@ -248,7 +252,9 @@ class Customer
               if ($this->stmt->execute([$newClientId, $account_bonus, $last_recharge_date, $status, $created_at])) {
                 if (sendConfirmationEmailToNewCustomer($fullName, $email, $login_pass, $tokenExp, $link)) {
                   $this->dbh->commit();
-                  $this->response = $this->Alert->alertMessage("SUCCESS:", " Registration was successful, activation mail was sent to $email. Click the link on the message to activate your account!", "success") . $this->Core->accountActivationRedirect("login");
+                  $this->response = $this->Alert->alertMessage("SUCCESS:", " Registration was successful, activation mail was sent to $email. Click the link on the message to activate your account!", "success") . "<script>setTimeout(()=>{
+                    window.location.href='./login';
+                  },15000);</script>";
                 }
               }
             }
@@ -314,8 +320,8 @@ class Customer
               $this->stmt = $this->dbh->prepare($query);
               if ($this->stmt->execute([$newClientId, $account_bonus, $last_recharge_date, $status, $created_at])) {
                 if (sendConfirmationEmailToNewCustomer($fullName, $email, $login_pass, $tokenExp, $link)) {
-                  $this->response = $this->Alert->flashMessage("SUCCESS:", " Registration was successful, activation mail was sent to $email. Click the link on the message to activate your account!", "success", "top-right") . $this->Core->pageReload();
                   $this->dbh->commit();
+                  $this->response = $this->Alert->flashMessage("SUCCESS:", " Registration was successful, activation mail was sent to $email. Click the link on the message to activate your account!", "success", "top-right") . $this->Core->pageReload();
                 }
               }
             }
@@ -482,7 +488,7 @@ class Customer
             $this->dbh->commit();
             $this->response = $this->Alert->alertMessage("SUCCESS:", "Account Password updated successfully, Pls wait...", "success") . "<script>
     setTimeout(() => {
-      window.location.href = 'logout?action=customer-logout';
+      window.location.href = './logout?action=customer-logout';
     }, 3500);
     </script>";
           }
@@ -531,7 +537,7 @@ class Customer
             $this->response = $this->Alert->alertMessage("SERVER ERROR", "Internal Server Error: " . $e->getMessage(), "danger");
         }
       } else {
-        $this->response = $this->Alert->alertMessage("WARNING:", "No account associated with this $email!", "danger");
+        $this->response = $this->Alert->alertMessage("WARNING:", "We can't find a user with that e-mail address!", "danger");
       }
     }
     return $this->response;

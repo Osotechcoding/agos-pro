@@ -49,11 +49,11 @@ require_once "Helper/helper.php";
               </a>
             </li>
             <li class="nav-item tab-all"><a class="nav-link show" href="#tab1" data-bs-toggle="tab">Pending
-                Booking</a>
+              </a>
             </li>
-            <li class="nav-item tab-all"><a class="nav-link" href="#tab2" data-bs-toggle="tab">Accepted Booking</a>
+            <li class="nav-item tab-all"><a class="nav-link" href="#tab2" data-bs-toggle="tab">Accepted </a>
             </li>
-            <li class="nav-item tab-all"><a class="nav-link" href="#tab3" data-bs-toggle="tab">Rejected Booking</a>
+            <li class="nav-item tab-all"><a class="nav-link" href="#tab3" data-bs-toggle="tab">Rejected</a>
             </li>
           </ul>
           <div class="tab-content tab-space">
@@ -81,7 +81,6 @@ require_once "Helper/helper.php";
                           </thead>
                           <tbody>
                             <?php $all = $Room->getAllBookings();
-
                             if ($all) {
                               $cnt = 0;
                               foreach ($all as $item) {
@@ -136,9 +135,7 @@ require_once "Helper/helper.php";
               <div class="row">
                 <div class="col-md-12">
                   <div class="card-box">
-
                     <div class="card-body">
-
                       <div class="table-scrollable table-responsive">
                         <table class="table table-checkable order-column full-width text-center osotech_datatable">
                           <thead>
@@ -195,10 +192,14 @@ require_once "Helper/helper.php";
                               </td>
                               <td class="center">
                                 <button type="button" data-id="<?php echo $pending->id; ?>"
-                                  data-action="approve_booking" class="btn btn-xs btn-success approve_btn">
+                                  data-room="<?php echo $pending->room_id; ?>"
+                                  data-username="<?php echo $pending->customer_id; ?>" data-action="approve"
+                                  class="btn btn-xs btn-success approve_btn">
                                   Approve
                                 </button>
-                                <button type="button" data-id="<?php echo $pending->id; ?>" data-action="reject_booking"
+                                <button type="button" data-room="<?php echo $pending->room_id; ?>"
+                                  data-username="<?php echo $pending->customer_id; ?>"
+                                  data-id="<?php echo $pending->id; ?>" data-action="reject"
                                   class="btn btn-xs btn-danger reject_btn">
                                   Reject
                                 </button>
@@ -300,7 +301,7 @@ require_once "Helper/helper.php";
 
                     <div class="card-body">
 
-                      <div class="table-scrollable">
+                      <div class="table-responsive">
                         <table
                           class="table table-hover table-checkable order-column full-width text-center osotech_datatable">
                           <thead>
@@ -355,7 +356,6 @@ require_once "Helper/helper.php";
                               <td class="center">
                                 <span class="label label-sm label-danger">Rejected </span>
                               </td>
-
                             </tr>
                             <?php
                               }
@@ -379,7 +379,38 @@ require_once "Helper/helper.php";
   <script>
   $(document).ready(function() {
     $(".osotech_datatable").dataTable();
-  })
+
+    let rejectBtn = $(".reject_btn");
+    approveCustomerBooking(rejectBtn);
+
+    let approveBtn = $(".approve_btn");
+    approveCustomerBooking(approveBtn);
+  });
+
+  function approveCustomerBooking(actionBtn) {
+    actionBtn.on("click", function() {
+      let bookingId = $(this).data("id");
+      let action = $(this).data("action");
+      let customer_id = $(this).data("username");
+      let rId = $(this).data("room");
+      if (confirm(`Are you sure, You want to ${action} this Booking?`)) {
+        //send request
+        $.post("App/Controller/Actions", {
+          action: action,
+          bookingId: bookingId,
+          customerId: customer_id,
+          rId: rId
+        }, (response) => {
+          setTimeout(() => {
+            console.log(response);
+            $("#server-response").html(response);
+          }, 500);
+        });
+      } else {
+        return false;
+      }
+    });
+  }
   </script>
 </body>
 

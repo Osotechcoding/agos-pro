@@ -1,7 +1,5 @@
 <?php
 
-use PHPMailer\PHPMailer\PHPMailer;
-
 class Manager
 {
   private PDO $dbh;
@@ -99,10 +97,9 @@ class Manager
         $login_pass = $this->Core->generateRandomUserToken(12);
         //convert the random generated password to hash
         $hashed_pass = $this->Core->encryptUserPassword($login_pass);
-        $exp_name = explode("@", $email);
-        $username = $exp_name[0];
+        $username = $last_name;
         $create_at = date("Y-m-d H:i:s");
-        $link = "http://localhost/agos-pro/staff-login";
+        $link = $this->Core->web_root() . "staff-login";
         $token = $this->Core->generateRandomUserToken(34);
         try {
           $this->dbh->beginTransaction();

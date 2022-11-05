@@ -145,8 +145,8 @@
               Create Account
             </button>
           </div>
-          <div class="text-center p-t-40 mt-2">
-            <a class="txt1" href="./login">
+          <div class="text-center p-t-40 mt-2 text-warning">
+            <a class="txt1 text-warning" href="./login">
               already have an account?
             </a>
           </div>
