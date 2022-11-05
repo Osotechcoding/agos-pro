@@ -20,9 +20,9 @@ class Manager
     $password = $this->Core->sanitise_string($data['login_pass']);
 
     if ($this->Core->isEmptyStr($email) || $this->Core->isEmptyStr($password)) {
-      $this->response = $this->Alert->alertMessage("AGOS Says", "Login details are required!", "danger");
+      $this->response = $this->Alert->alertMessage("WARNING", "Login details are required!", "danger");
     } elseif (!$this->Core->is_valid_email_address($email)) {
-      $this->response = $this->Alert->alertMessage("AGOS Says", "Invalid email address!", "danger");
+      $this->response = $this->Alert->alertMessage("WARNING", "Invalid email address!", "danger");
     } else {
       $sql = "SELECT * FROM `{$this->table}` WHERE email=? LIMIT 1";
       $this->stmt = $this->dbh->prepare($sql);
@@ -43,17 +43,20 @@ class Manager
           $_SESSION['AGOS_STAFF_UNIQUE_EMAIL'] = $rows->email;
           $_SESSION['AGOS_STAFF_UNIQUE_USERNAME'] = $rows->username;
           $_SESSION['AGOS_STAFF_UNIQUE_ROLE'] = $rows->role_type;
-
-          $sql = "UPDATE `{$this->table}` SET is_online=1 WHERE id=? LIMIT 1";
-          $this->stmt = $this->dbh->prepare($sql);
-          if ($this->stmt->execute([$rows->id])) {
-            $this->response = $this->Alert->alertMessage("AGOS Says", "Login successfully, Pls wait..!", "success") . $this->Core->appRedirect("staff-dashboard");
+          if ($rows->status == '0') {
+            $this->response = $this->Alert->alertMessage("NOTICE:", "This account has been suspended, contact your Admin Officer!", "danger");
+          } else {
+            $sql = "UPDATE `{$this->table}` SET is_online=1 WHERE id=? LIMIT 1";
+            $this->stmt = $this->dbh->prepare($sql);
+            if ($this->stmt->execute([$rows->id])) {
+              $this->response = $this->Alert->alertMessage("SUCCESS", "Login successfully, Pls wait..!", "success") . $this->Core->appRedirect("staff-dashboard");
+            }
           }
         } else {
-          $this->response = $this->Alert->alertMessage("AGOS Says", "Account details not found!", "danger");
+          $this->response = $this->Alert->alertMessage("WARNING", "Account details not found!", "danger");
         }
       } else {
-        $this->response = $this->Alert->alertMessage("AGOS Says", "Invalid login details!", "danger");
+        $this->response = $this->Alert->alertMessage("WARNING", "Invalid login details!", "danger");
       }
     }
     return $this->response;
@@ -81,14 +84,14 @@ class Manager
       $this->Core->isEmptyStr($city) ||
       $this->Core->isEmptyStr($gender)
     ) {
-      $this->response = $this->Alert->flashMessage("AGOS Says", "Invalid submission, Pls check and try again!", "error", "top-right");
+      $this->response = $this->Alert->flashMessage("WARNING", "Invalid submission, Pls check and try again!", "error", "top-right");
     } elseif (!$this->Core->is_valid_email_address($email)) {
 
-      $this->response = $this->Alert->flashMessage("AGOS Says", "Invalid email address!", "error", "top-right");
+      $this->response = $this->Alert->flashMessage("WARNING", "Invalid email address!", "error", "top-right");
     } else {
       //check if the email is already added
       if ($this->Core->userDataExisted($this->table, "email", $email)) {
-        $this->response = $this->Alert->flashMessage("AGOS Says", "$email already taken!", "error", "top-right");
+        $this->response = $this->Alert->flashMessage("WARNING", "$email already taken!", "error", "top-right");
       } else {
         //try to insert ths new manager into database
         $status = 1;

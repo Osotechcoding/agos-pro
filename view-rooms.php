@@ -30,7 +30,7 @@
                 <div class="page-title">Rooms</div>
               </div>
               <ol class="breadcrumb page-breadcrumb pull-right">
-                <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="./">Home</a>&nbsp;<i
+                <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="./staff-dashboard">Home</a>&nbsp;<i
                     class="fa fa-angle-right"></i>
                 </li>
                 <li><a class="parent-item" href="#">Rooms</a>&nbsp;<i class="fa fa-angle-right"></i>
@@ -57,7 +57,7 @@
                     </div>
                   </div>
                   <div class="table-scrollable">
-                    <table class="table table-hover table-checkable order-column full-width" id="example4">
+                    <table class="table table-checkable order-column full-width" id="example4">
                       <thead>
                         <tr>
 
