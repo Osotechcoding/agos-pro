@@ -80,9 +80,7 @@ require_once "Helper/helper.php";
                         </tr>
                       </thead>
                       <tbody>
-
                         <?php $allRooms = $Room->getAllRooms();
-
                         if ($allRooms) {
                           $cnt = 0;
                           foreach ($allRooms as $room) {
@@ -104,10 +102,7 @@ require_once "Helper/helper.php";
                             <?php echo (bool)$room->is_booked == '0' ? '<span class="badge badge-success badge-pill">Available</span>' : ' <span class="badge badge-danger badge-pill">Booked</span>'; ?>
                           </td>
                           <td class="center">
-                            <a href="edit_room.html" class="btn btn-tbl-edit btn-xs">
-                              <i class="fa fa-pencil"></i>
-                            </a>
-                            <a class="btn btn-tbl-delete btn-xs">
+                            <a class="btn btn-tbl-delete btn-circle deepPink-bgcolor btn-xs">
                               <i class="fa fa-trash-o "></i>
                             </a>
                           </td>
