@@ -461,4 +461,22 @@ class Customer
     return $this->response;
     $this->dbh = null;
   }
+
+  public function delete($data)
+  {
+    try {
+      $id = $this->Core->sanitise_string($data['custId']);
+      $this->dbh->beginTransaction();
+      $this->stmt = $this->dbh->prepare("DELETE FROM `{$this->table}` WHERE id=? LIMIT 1");
+      if ($this->stmt->execute([$id])) {
+        $this->dbh->commit();
+        $this->response = $this->Alert->flashMessage("SUCCESS", "Customer Deleted Successfully!", "success", "top-right") . $this->Core->pageReload();
+      }
+    } catch (PDOException $e) {
+      $this->dbh->rollback();
+      $this->response = $this->Alert->flashMessage("ERROR", "Something went wrong!: " . $e->getMessage(), "error", "top-right");
+    }
+    return $this->response;
+    $this->dbh = null;
+  }
 }

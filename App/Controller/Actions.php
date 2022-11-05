@@ -39,8 +39,26 @@ if ($request_method === "POST") {
           echo $result;
         }
         break;
+      case 'Unsuspend':
+        $result = $Manager->suspendStaff($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
+      case 'Suspend':
+        $result = $Manager->suspendStaff($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
       case 'customer_login_form_submit__':
         $result = $Customer->login($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
+      case 'delete_cust':
+        $result = $Customer->delete($_POST);
         if ($result) {
           echo $result;
         }

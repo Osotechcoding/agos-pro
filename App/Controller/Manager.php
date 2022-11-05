@@ -176,4 +176,38 @@ class Manager
       $this->dbh = null;
     }
   }
+
+  public function suspendStaff($data)
+  {
+    try {
+      $id = $this->Core->sanitise_string($data['staffId']);
+      $action = $this->Core->sanitise_string($data['action']);
+      switch ($action) {
+        case 'Suspend':
+          $status = "0";
+          $status_text = "Suspended";
+          break;
+        case 'Unsuspend':
+          $status = "1";
+          $status_text = "Unsuspended";
+          break;
+
+        default:
+          $status = "1";
+          $status_text = "Unsuspended";
+          break;
+      }
+      $this->dbh->beginTransaction();
+      $this->stmt = $this->dbh->prepare("UPDATE `{$this->table}` SET `status`=? WHERE id=? LIMIT 1");
+      if ($this->stmt->execute([$status, $id])) {
+        $this->dbh->commit();
+        $this->response = $this->Alert->flashMessage("SUCCESS", "Staff $status_text Successfully!", "success", "top-right") . $this->Core->pageReload();
+      }
+    } catch (PDOException $e) {
+      $this->dbh->rollback();
+      $this->response = $this->Alert->flashMessage("ERROR", "Something went wrong!: " . $e->getMessage(), "error", "top-right");
+    }
+    return $this->response;
+    $this->dbh = null;
+  }
 }

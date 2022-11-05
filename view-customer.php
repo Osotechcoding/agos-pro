@@ -115,8 +115,9 @@ require_once "Helper/helper.php";
                               </td>
                               <td class="center">
                                 <a href="recharge-wallet?cid=<?php echo $customer->id; ?>&action=recharge"
-                                  class="btn btn-circle deepPink-bgcolor btn-sm">Top-Up Wallet</a>
-
+                                  class="btn btn-circle btn-info  btn-sm">Top-Up Wallet</a>
+                                <button type="button" data-id="<?php echo $customer->id; ?>" data-action="delete_cust"
+                                  class="btn btn-circle delete_customer_btn deepPink-bgcolor btn-sm osotech_action_<?php echo $customer->id; ?>">Delete</button>
                               </td>
                             </tr>
                             <?php
@@ -167,8 +168,10 @@ require_once "Helper/helper.php";
                         </div>
                         <div class="profile-userbuttons">
                           <a href="recharge-wallet?cid=<?php echo $customer->id; ?>&action=recharge"
-                            class="btn btn-circle deepPink-bgcolor btn-sm">Top Up Wallet
+                            class="btn btn-circle btn-info btn-sm">Top Up Wallet
                             More</a>
+                          <button type="button" data-id="<?php echo $customer->id; ?>" data-action="delete_cust"
+                            class="btn btn-circle delete_customer_btn deepPink-bgcolor btn-sm osotech_action_<?php echo $customer->id; ?>">Delete</button>
                         </div>
                       </div>
                     </div>
@@ -188,6 +191,36 @@ require_once "Helper/helper.php";
     <?php include_once "Inc/Footer.php"; ?>
   </div>
   <?php include_once "Inc/DatatableFooterScript.php"; ?>
+  <script>
+  $(document).ready(function() {
+    let delete_customer_btn = $(".delete_customer_btn");
+    deleteCustomer(delete_customer_btn);
+  });
+
+  function deleteCustomer(delbtn) {
+    delbtn.on("click", function() {
+      let custId = $(this).data("id");
+      let action = $(this).data("action");
+      if (confirm('Are you sure, You want to delete this Customer?')) {
+        $(".osotech_action_" + custId).html("Loading...").attr("disabled", true);
+        //send request
+        $.post("App/Controller/Actions", {
+          action: action,
+          custId: custId
+        }, (response) => {
+          $(".osotech_action_" + custId).html('Delete').attr("disabled", false);
+          setTimeout(() => {
+            console.log(response);
+            $("#server-response").html(response);
+          }, 1000);
+        });
+      } else {
+        return false;
+      }
+
+    });
+  }
+  </script>
 </body>
 
 </html>

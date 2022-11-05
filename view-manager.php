@@ -18,13 +18,10 @@ require_once "Helper/helper.php";
   class="page-header-fixed sidemenu-closed-hidelogo page-content-white page-md header-white dark-sidebar-color logo-dark">
   <div class="page-wrapper">
     <!-- start header -->
-
     <?php include_once "Inc/Header.php" ?>
-
     <div class="page-container">
       <!-- start sidebar menu -->
       <?php include_once "Inc/TopSidebar.php"; ?>
-
       <div class="page-content-wrapper">
         <div class="page-content">
           <div class="page-bar">
@@ -78,25 +75,23 @@ require_once "Helper/helper.php";
                           <thead>
                             <tr>
                               <th class="center">S/N</th>
-                              <th class="center"> Name </th>
-                              <th class="center"> Designation </th>
-                              <th class="center"> Mobile </th>
+                              <th class="center"> FullName </th>
+                              <th class="center"> Role </th>
+                              <th class="center"> Phone </th>
                               <th class="center"> Email </th>
-                              <th class="center"> Status </th>
-                              <th class="center">Joining Date</th>
+                              <th class="center"> Job Status </th>
+                              <th class="center">Reg Date</th>
                               <th class="center"> Action </th>
                             </tr>
                           </thead>
                           <tbody>
                             <?php $allStaff = $Manager->getAllStaff();
-
                             if ($allStaff) {
                               $cnt = 0;
                               foreach ($allStaff as $staff) {
                                 $cnt++;
                             ?>
                             <tr class="odd gradeX">
-
                               <td class="center"><?php echo $cnt; ?></td>
                               <td class="center"><?php echo $staff->fullname; ?></td>
                               <td class="center"><?php echo $staff->role_type; ?><br /> <span
@@ -113,12 +108,13 @@ require_once "Helper/helper.php";
                               </td>
                               <td class="center">
                                 <?php if ($staff->status == '0') { ?>
-                                <button type="button" data-id="<?php echo $staff->id; ?>" data-action="Suspend"
-                                  class="btn btn-circle deepPink-bgcolor btn-sm suspend_btn">Suspend</button>
+                                <button type="button" data-id="<?php echo $staff->id; ?>" data-action="Unsuspend"
+                                  class="btn btn-circle btn-secondary btn-sm unsuspend_btn osotech_action_<?php echo $staff->id; ?>">Unsuspend</button>
                                 <?php
                                     } else { ?>
-                                <button type="button" data-id="<?php echo $staff->id; ?>" data-action="Unsuspend"
-                                  class="btn btn-circle btn-success btn-sm unsuspend_btn">UnSuspend</button>
+
+                                <button type="button" data-id="<?php echo $staff->id; ?>" data-action="Suspend"
+                                  class="btn btn-circle deepPink-bgcolor btn-sm suspend_btn osotech_action_<?php echo $staff->id; ?>">Suspend</button>
                                 <?php
                                     } ?>
                               </td>
@@ -170,7 +166,17 @@ require_once "Helper/helper.php";
                           </p>
                         </div>
                         <div class="profile-userbuttons">
-                          <a href="" class="btn btn-circle deepPink-bgcolor btn-sm">Suspend</a>
+                          <?php if ($staff->status == '0') { ?>
+                          <button type="button" data-id="<?php echo $staff->id; ?>" data-action="Unsuspend"
+                            class="btn btn-circle btn-secondary btn-sm unsuspend_btn osotech_action_<?php echo $staff->id; ?>">Unsuspend</button>
+                          <?php
+                              } else { ?>
+
+                          <button type="button" data-id="<?php echo $staff->id; ?>" data-action="Suspend"
+                            class="btn btn-circle deepPink-bgcolor btn-sm suspend_btn osotech_action_<?php echo $staff->id; ?>">Suspend</button>
+                          <?php
+                              } ?>
+
                         </div>
                       </div>
                     </div>
@@ -193,12 +199,35 @@ require_once "Helper/helper.php";
   <script>
   $(document).ready(function() {
     let unsuspend_btn = $(".unsuspend_btn");
-    unsuspend_btn.on("click", function() {
+    suspendAction(unsuspend_btn);
+    let suspend_btn = $(".suspend_btn");
+    suspendAction(suspend_btn);
+  })
+
+  function suspendAction(btn) {
+    btn.on("click", function() {
       let staff_id = $(this).data("id");
       let action = $(this).data("action");
-      alert(staff_id + " " + action);
-    })
-  })
+
+      if (confirm(`Are you sure, You want to ${action} this Staff?`)) {
+        $(".osotech_action_" + staff_id).html("Loading...").attr("disabled", true);
+        //send request
+        $.post("App/Controller/Actions", {
+          action: action,
+          staffId: staff_id
+        }, (response) => {
+          $(".osotech_action_" + staff_id).html(action).attr("disabled", false);
+          setTimeout(() => {
+            console.log(response);
+            $("#server-response").html(response);
+          }, 500);
+        });
+      } else {
+        return false;
+      }
+
+    });
+  }
   </script>
 </body>
 
