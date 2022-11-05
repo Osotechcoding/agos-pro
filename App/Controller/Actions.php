@@ -33,7 +33,7 @@ if ($request_method === "POST") {
         }
         break;
 
-      case 'auth_staff_login_form_submit':
+      case 'auth_staff_login_form_submit__':
         $result = $Manager->login($_POST);
         if ($result) {
           echo $result;
@@ -63,7 +63,7 @@ if ($request_method === "POST") {
           echo $result;
         }
         break;
-      case 'walkin_booking_form_submited':
+      case 'walkin_booking_form_submited_via_staff':
         $result = $Customer->walkInClientBooking($_POST);
         if ($result) {
           echo $result;

@@ -19,16 +19,17 @@ class Manager
   public function login($data)
   {
     $email = $this->Core->sanitise_string($data['login_email']);
-    $password = $this->Core->sanitise_string($data['login_password']);
+    $password = $this->Core->sanitise_string($data['login_pass']);
 
     if ($this->Core->isEmptyStr($email) || $this->Core->isEmptyStr($password)) {
+      $this->response = $this->Alert->alertMessage("AGOS Says", "Login details are required!", "danger");
     } elseif (!$this->Core->is_valid_email_address($email)) {
+      $this->response = $this->Alert->alertMessage("AGOS Says", "Invalid email address!", "danger");
     } else {
-      $sql = "SELECT * FROM `{$this->table}` WHERE email=?  =? LIMIT 1";
+      $sql = "SELECT * FROM `{$this->table}` WHERE email=? LIMIT 1";
       $this->stmt = $this->dbh->prepare($sql);
       $this->stmt->execute([$email]);
       if ($this->stmt->rowCount() == '1') {
-        //get the admin details
         $rows = $this->stmt->fetch();
         $db_password = $rows->password;
         //then check compare the passwords
@@ -36,10 +37,8 @@ class Manager
           if (isset($data['remember_me']) && $data['remember_me'] === 'on') {
             //create and store login info to local storage
             @setcookie("staff_email", $email, time() + 604800, "/");
-            // @setcookie("staff_pass", $password, time() + 604800, "/"); //store for 7 days
           } else {
             setcookie("staff_email", '', time() - 100, "/");
-            //setcookie("staff_pass", '', time() - 100, "/");
           }
           $_SESSION['AGOS_STAFF_UNIQUE_TOKEN'] = $this->Core->generateRandomUserToken(35);
           $_SESSION['AGOS_STAFF_UNIQUE_ID'] = $rows->id;
@@ -50,17 +49,19 @@ class Manager
           $sql = "UPDATE `{$this->table}` SET is_online=1 WHERE id=? LIMIT 1";
           $this->stmt = $this->dbh->prepare($sql);
           if ($this->stmt->execute([$rows->id])) {
-            $this->response = $this->Alert->flashMessage("AGOS Says", "Login successfully, Pls wait..!", "success", "top-right") . $this->Core->appRedirect("staff-dashboard");
+            $this->response = $this->Alert->alertMessage("AGOS Says", "Login successfully, Pls wait..!", "success") . $this->Core->appRedirect("staff-dashboard");
           }
         } else {
-          $this->response = $this->Alert->flashMessage("AGOS Says", "Account details not found!", "error", "top-right");
+          $this->response = $this->Alert->alertMessage("AGOS Says", "Account details not found!", "danger");
         }
       } else {
-        $this->response = $this->Alert->flashMessage("AGOS Says", "Invalid login details!", "error", "top-right");
+        $this->response = $this->Alert->alertMessage("AGOS Says", "Invalid login details!", "danger");
       }
     }
     return $this->response;
+    $this->dbh = null;
   }
+
   public function register($data)
   {
     $first_name = $this->Core->sanitise_string($data['first_name']);

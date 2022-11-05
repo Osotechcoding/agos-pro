@@ -19,14 +19,13 @@
   <div class="limiter">
     <div class="container-login100 page-background">
       <div class="wrap-login100">
-        <form class="login100-form validate-form" id="LoginFormData">
+        <form class="login100-form validate-form" id="staffLoginFormData">
 
           <span class="login100-form-title p-b-34 p-t-27">
             STAFF LOGIN
-
           </span>
-          <span id="response" class="text-center mt-3 text-lowercase"></span>
-          <input type="hidden" name="action" value="auth_admin_login_form_submit__">
+          <span id="response" class="text-center mt-3"></span>
+          <input type="hidden" name="action" value="auth_staff_login_form_submit__">
           <div class="wrap-input100 validate-input" data-validate="Enter username">
             <input class="input100" type="text" name="login_email" placeholder=" Email">
             <span class="focus-input100" data-placeholder="&#xf207;"></span>
@@ -62,33 +61,19 @@
 
   <script>
   $(document).ready(function() {
-    const formData = $("#LoginFormData");
-    formData.on("submit", (event) => {
+    const fd = $("#staffLoginFormData");
+    fd.on("submit", (event) => {
       event.preventDefault();
       $("._loadingBtn__").html("Loading...").attr("disabled", true);
-      $.post("App/Controller/Actions", formData.serialize(), (res) => {
+      $.post("App/Controller/Actions", fd.serialize(), (res) => {
         setTimeout(() => {
           $("._loadingBtn__").html("Sign In").attr("disabled", false);
           $("#response").html(res);
         }, 1000);
       })
 
-    })
-
-    var showPass = 0;
-    $('.btn-show-pass').on('click', function() {
-      if (showPass == 0) {
-        $(this).next('input').attr('type', 'text');
-        $(this).addClass('active');
-        showPass = 1;
-      } else {
-        $(this).next('input').attr('type', 'password');
-        $(this).removeClass('active');
-        showPass = 0;
-      }
-
     });
-  })
+  });
   </script>
 </body>
 

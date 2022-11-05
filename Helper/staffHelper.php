@@ -16,5 +16,5 @@ $Pin = new Pin($dbh, $Core, $Alert);
 $Core->osotech_session();
 
 $Manager->isStaffLoggedIn();
-
-$staff_data = $Manager->getStaffById($_SESSION['AGOS_STAFF_UNIQUE_ID']);
+$logerId = $_SESSION['AGOS_STAFF_UNIQUE_ID'];
+$staff_data = $Manager->getStaffById($logerId);

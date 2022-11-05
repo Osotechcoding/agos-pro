@@ -21,7 +21,7 @@ if ($resquest_method === "GET") {
         }
         break;
 
-      case 'destroy_staff_session':
+      case 'staff-logout':
         if (isset($_SESSION['AGOS_STAFF_UNIQUE_ID']) && $_SESSION['AGOS_STAFF_UNIQUE_ID'] !== "") {
           $mid = $_SESSION['AGOS_STAFF_UNIQUE_ID'];
           require_once "Helper/staffHelper.php";

@@ -1,13 +1,11 @@
-<?php
-require_once "Helper/helper.php";
-?>
+<?php require_once "Helper/staffHelper.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 <!-- BEGIN HEAD -->
 
 <head>
   <?php include_once "Inc/MetaTag.php"; ?>
-  <title>Admin Dashboard</title>
+  <title>Add Room</title>
   <!-- icons -->
   <?php include_once("Inc/HeaderScript.php"); ?>
 </head>
@@ -16,12 +14,13 @@ require_once "Helper/helper.php";
 <body
   class="page-header-fixed sidemenu-closed-hidelogo page-content-white page-md header-white dark-sidebar-color logo-dark">
   <div class="page-wrapper">
-    <?php include_once "Inc/Header.php" ?>
-
+    <!-- start header -->
+    <?php include_once "Inc/staffHeader.php" ?>
+    <!-- end header -->
     <!-- start page container -->
     <div class="page-container">
       <!-- start sidebar menu -->
-      <?php include_once "Inc/TopSidebar.php"; ?>
+      <?php include_once "Inc/staffSidebar.php"; ?>
       <!-- start page content -->
       <div class="page-content-wrapper">
         <div class="page-content">
@@ -46,7 +45,7 @@ require_once "Helper/helper.php";
               <div class="card card-box">
                 <div class="card-head">
                   <header class="text-center m-4">
-                    <h2>Room & Customer's Information</h2>
+                    <h2>Booking Checkout's Information</h2>
                   </header>
                   <button id="panel-button" class="mdl-button mdl-js-button mdl-button--icon pull-right"
                     data-upgraded=",MaterialButton">
@@ -246,6 +245,14 @@ require_once "Helper/helper.php";
   <?php include_once "Inc/FooterScript.php"; ?>
   <script>
   $(document).ready(function() {
+    // let checkInDate = $(".date1");
+    // var d1 = new Date("08/14/2020");
+    // var d2 = new Date("09/14/2020");
+
+    // var diff = d2.getTime() - d1.getTime();
+
+    // var daydiff = diff / (1000 * 60 * 60 * 24);
+
     const formData = $("#walkInBookingForm");
     formData.on("submit", (e) => {
       e.preventDefault();

@@ -141,7 +141,7 @@ if (isset($_REQUEST['roomId']) && isset($_REQUEST['action']) && isset($_REQUEST[
                           <span class="required"> * </span>
                         </label>
                         <div class="col-md-6">
-                          <input name="no_of_guest" autocomplete="off" type="number" min="0" max="5"
+                          <input name="no_of_guest" autocomplete="off" type="number" min="1" max="5"
                             placeholder="No of Guest" class="form-control input-height" />
                         </div>
                       </div>

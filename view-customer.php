@@ -73,7 +73,7 @@ require_once "Helper/helper.php";
                     </div>
                     <div class="card-body ">
                       <div class="table-scrollable">
-                        <table class="table table-hover table-checkable order-column full-width" id="example4">
+                        <table class="table table-checkable order-column full-width" id="example4">
                           <thead>
                             <tr>
 

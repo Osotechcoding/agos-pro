@@ -40,11 +40,11 @@
 	            <span class="arrow"></span>
 	          </a>
 	          <ul class="sub-menu">
-	            <li class="nav-item">
+	            <!-- <li class="nav-item">
 	              <a href="walkin-booking" class="nav-link ">
 	                <span class="title">New Booking</span>
 	              </a>
-	            </li>
+	            </li> -->
 	            <li class="nav-item">
 	              <a href="view-booking-list" class="nav-link ">
 	                <span class="title">View Booking</span>
@@ -60,11 +60,11 @@
 	            <span class="arrow"></span>
 	          </a>
 	          <ul class="sub-menu">
-	            <li class="nav-item">
+	            <!-- <li class="nav-item">
 	              <a href="add-room" class="nav-link ">
 	                <span class="title">Add Room</span>
 	              </a>
-	            </li>
+	            </li> -->
 	            <li class="nav-item">
 	              <a href="rooms" class="nav-link ">
 	                <span class="title">View Rooms</span>
@@ -127,7 +127,7 @@
 	          </ul>
 	        </li>
 
-	        <li class="nav-item">
+	        <!-- <li class="nav-item">
 	          <a href="javascript:;" class="nav-link nav-toggle"> <i class="fa fa-line-chart"></i>
 	            <span class="title">Reports</span>
 	            <span class="arrow"></span>
@@ -144,7 +144,7 @@
 	            </li>
 
 	          </ul>
-	        </li>
+	        </li> -->
 
 	      </ul>
 	    </div>

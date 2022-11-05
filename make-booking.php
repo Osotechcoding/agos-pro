@@ -1,13 +1,11 @@
-<?php
-require_once "Helper/helper.php";
-?>
+<?php require_once "Helper/staffHelper.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 <!-- BEGIN HEAD -->
 
 <head>
   <?php include_once "Inc/MetaTag.php"; ?>
-  <title>Admin Dashboard</title>
+  <title>Add Room</title>
   <!-- icons -->
   <?php include_once("Inc/HeaderScript.php"); ?>
 </head>
@@ -16,12 +14,13 @@ require_once "Helper/helper.php";
 <body
   class="page-header-fixed sidemenu-closed-hidelogo page-content-white page-md header-white dark-sidebar-color logo-dark">
   <div class="page-wrapper">
-    <?php include_once "Inc/Header.php" ?>
-
+    <!-- start header -->
+    <?php include_once "Inc/staffHeader.php" ?>
+    <!-- end header -->
     <!-- start page container -->
     <div class="page-container">
       <!-- start sidebar menu -->
-      <?php include_once "Inc/TopSidebar.php"; ?>
+      <?php include_once "Inc/staffSidebar.php"; ?>
       <!-- start page content -->
       <div class="page-content-wrapper">
         <div class="page-content">
@@ -48,19 +47,8 @@ require_once "Helper/helper.php";
                   <header class="text-center m-4">
                     <h2>Room & Customer's Information</h2>
                   </header>
-                  <button id="panel-button" class="mdl-button mdl-js-button mdl-button--icon pull-right"
-                    data-upgraded=",MaterialButton">
-                    <i class="material-icons">more_vert</i>
-                  </button>
-                  <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                    data-mdl-for="panel-button">
-                    <li class="mdl-menu__item"><a href="#"><i class="fa fa-eye"> </i> View Bookings</a>
-                    </li>
-                    <li class="mdl-menu__item"><a href=""><i class="fa fa-money"> </i> Make Payment</a>
-                    </li>
-                    <li class="mdl-menu__item"><a href=""><i class="fa fa-line-chart"> </i> Payment Reports</a>
-                    </li>
-                  </ul>
+
+
                 </div>
                 <div class="card-body" id="bar-parent">
                   <form id="walkInBookingForm" class="form-horizontal">
@@ -120,8 +108,8 @@ require_once "Helper/helper.php";
                           <span class="required"> * </span>
                         </label>
                         <div class="col-md-6">
-                          <textarea name="address" placeholder="Permanent Address" class="form-control-textarea"
-                            rows="5"></textarea>
+                          <textarea name="address" placeholder="Permanent Address" class="form-control"
+                            rows="3"></textarea>
                         </div>
                       </div>
                       <div class="form-group row">
@@ -190,35 +178,36 @@ require_once "Helper/helper.php";
                           </select>
                         </div>
                       </div>
-
                       <div class="form-group row">
-                        <label class="control-label col-md-3">No of People
+                        <label class="control-label col-md-3">No of Guest
                           <span class="required"> * </span>
                         </label>
                         <div class="col-md-6">
-                          <select class="form-select input-height" name="nop">
-                            <option value="">Select...</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                          </select>
+                          <input name="no_of_guest" autocomplete="off" type="number" min="1" max="5"
+                            placeholder="No of Guest" class="form-control input-height" />
                         </div>
                       </div>
 
-
+                      <div class="form-group row">
+                        <label class="control-label col-md-3">No of Children
+                          <span class="required"> * </span>
+                        </label>
+                        <div class="col-md-6">
+                          <input name="no_of_kids" placeholder="No of Children" type="number" autocomplete="off"
+                            type="number" min="0" max="5" class="form-control input-height" />
+                        </div>
+                      </div>
 
                       <div class="form-group row">
                         <label class="control-label col-md-3">Comment
                         </label>
                         <div class="col-md-6">
-                          <textarea name="comment" class="form-control-textarea" placeholder="Comment"
-                            rows="5"></textarea>
+                          <textarea name="comment" class="form-control" placeholder="Comment" rows="3"></textarea>
                         </div>
                       </div>
-                      <input type="hidden" name="action" value="walkin_booking_form_submited">
+                      <input type="hidden" name="action" value="walkin_booking_form_submited_via_staff">
                       <input type="hidden" name="agos_token" value="2289484748448">
+                      <input type="hidden" name="booked_by" value="<?php echo $logerId; ?>">
                       <div class="form-actions">
                         <div class="row">
                           <div class="offset-md-3 col-md-9">
