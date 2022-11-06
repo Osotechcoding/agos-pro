@@ -138,7 +138,7 @@
                           <div class="offset-md-3 col-md-9">
                             <button type="submit"
                               class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-circle btn-primary btn-lg _loadingBtn__">Submit</button>
-                            <button type="reset"
+                            <button type="button" onclick="window.history.back()"
                               class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-circle btn-danger">Cancel</button>
                           </div>
                         </div>

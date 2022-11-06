@@ -5,7 +5,7 @@
 
 <head>
   <?php include_once "Inc/MetaTag.php"; ?>
-  <title>Add Room</title>
+  <title>AGOS - View Room List </title>
   <!-- icons -->
   <?php include_once("Inc/DatatableHeaderScript.php"); ?>
 </head>
@@ -63,6 +63,7 @@
 
                           <th class="center"> # </th>
                           <th class="center"> img </th>
+                          <th class="center"> Room Name </th>
                           <th class="center"> Type </th>
                           <th class="center">Amenities </th>
                           <th class="center"> Desc </th>
@@ -86,6 +87,7 @@
                             <img src="image/<?php echo $room->firstImage; ?>" width="100" style="width:80px;height:50px"
                               alt="">
                           </td>
+                          <td class="center"><?php echo $room->room_name; ?></td>
                           <td class="center"><?php echo $room->room_type; ?></td>
                           <td class="center"><?php echo $room->acType; ?></td>
                           <td class="center"><?php echo $room->room_desc; ?></td>

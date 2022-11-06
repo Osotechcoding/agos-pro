@@ -103,16 +103,16 @@
                         <div class="col-md-6">
                           <select class="form-select form-control custom-select input-height" name="room_type">
                             <optgroup label="Occupancy">
-                              <option value="Single Room">King Room</option>
-                              <option value="Tripple Room">Twin Room</option>
-                              <option value="Double-double Room">Double-double Room</option>
-                              <option value="Quadruple Room">Double-double Room</option>
+                              <option value="Single Room">Single Room</option>
+                              <option value="Tripple Room">Tripple Room</option>
+                              <option value="Double Double Room">Double Double Room</option>
+                              <option value="Quadruple Room">Quadruple Room</option>
                             </optgroup>
                             <optgroup label="Bed">
                               <option value="King Room">King Room</option>
                               <option value="Queen Room">Queen Room</option>
                               <option value="Twin Room">Twin Room</option>
-                              <option value="Double Double Room">Double Double Room</option>
+
                             </optgroup>
                             <optgroup label="Design & Layout">
                               <option value="Presidential Room">Presidential Room</option>

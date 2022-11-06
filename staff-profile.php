@@ -7,7 +7,7 @@ require_once "Helper/staffHelper.php";
 
 <head>
   <?php include_once "Inc/MetaTag.php"; ?>
-  <title>Profile Settings</title>
+  <title><?php echo $staff_data->fullname; ?> Profile Settings</title>
   <?php include_once("Inc/HeaderScript.php"); ?>
 </head>
 <!-- END HEAD -->
@@ -27,15 +27,16 @@ require_once "Helper/staffHelper.php";
           <div class="page-bar">
             <div class="page-title-breadcrumb">
               <div class=" pull-left">
-                <div class="page-title">User Profile</div>
+                <div class="page-title"><?php echo $staff_data->fullname; ?>'s Profile</div>
               </div>
               <ol class="breadcrumb page-breadcrumb pull-right">
                 <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="./user-dashboard">Home</a>&nbsp;<i
                     class="fa fa-angle-right"></i>
                 </li>
-                <li><a class="parent-item" href="#">Extra</a>&nbsp;<i class="fa fa-angle-right"></i>
+                <li><a class="parent-item" href="#"><?php echo $staff_data->fullname; ?></a>&nbsp;<i
+                    class="fa fa-angle-right"></i>
                 </li>
-                <li class="active">User Profile</li>
+                <li class="active"> Profile</li>
               </ol>
             </div>
           </div>
@@ -52,7 +53,7 @@ require_once "Helper/staffHelper.php";
                     </div>
                     <div class="profile-usertitle">
                       <div class="profile-usertitle-name"> <?php echo ucwords($staff_data->fullname) ?> </div>
-                      <div class="profile-usertitle-job"> Member Since:
+                      <div class="profile-usertitle-job"> Staff Since:
                         <?php echo date("M jS, Y", strtotime($staff_data->created_at)); ?> </div>
                       <div class="profile-usertitle-job"> <?php echo $staff_data->email; ?> </div>
                     </div>

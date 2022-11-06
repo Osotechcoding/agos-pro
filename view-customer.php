@@ -52,26 +52,25 @@ require_once "Helper/helper.php";
                 View</a></li>
             <li class="nav-item tab-all"><a class="nav-link" href="#tab2" data-bs-toggle="tab">Grid View</a>
             </li>
+            <li class="nav-item tab-all"><button type="button" onclick="window.history.back()"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-circle btn-danger">Go
+                back </button>
+            </li>
           </ul>
           <div class="tab-content tab-space">
             <div class="tab-pane active show" id="tab1">
               <div class="row">
                 <div class="col-md-12">
                   <div class="card-box">
-                    <div class="card-head">
-                      <button id="panel-button" class="mdl-button mdl-js-button mdl-button--icon pull-right"
-                        data-upgraded=",MaterialButton">
-                        <i class="material-icons">more_vert</i>
-                      </button>
-                      <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                        data-mdl-for="panel-button">
-                        <li class="mdl-menu__item"><i class="material-icons">assistant_photo</i>Action</li>
-                        <li class="mdl-menu__item"><i class="material-icons">print</i>Another
-                          action</li>
-                        <li class="mdl-menu__item"><i class="material-icons">favorite</i>Something else here</li>
-                      </ul>
-                    </div>
+
                     <div class="card-body ">
+                      <div class="btn-group m-2">
+                        <a href="add-customer" id="addRow" class="btn btn-info">
+                          Add New Customer <i class="fa fa-plus"></i>
+                        </a>
+
+                      </div>
+
                       <div class="table-scrollable">
                         <table class="table table-checkable order-column full-width" id="example4">
                           <thead>

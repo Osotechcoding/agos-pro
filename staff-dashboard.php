@@ -14,16 +14,13 @@
 <body
   class="page-header-fixed sidemenu-closed-hidelogo page-content-white page-md header-white dark-sidebar-color logo-dark">
   <div class="page-wrapper">
-    <!-- start header -->
 
     <?php include_once "Inc/staffHeader.php" ?>
-    <!-- end header -->
-    <!-- start page container -->
+
     <div class="page-container">
       <!-- start sidebar menu -->
       <?php include_once "Inc/staffSidebar.php"; ?>
-      <!-- end sidebar menu -->
-      <!-- start page content -->
+
       <div class="page-content-wrapper">
         <div class="page-content">
           <div class="page-bar">
@@ -32,7 +29,7 @@
                 <div class="page-title">Welcome! <strong> <?php echo ucfirst($staff_data->fullname); ?></strong> </div>
               </div>
               <ol class="breadcrumb page-breadcrumb pull-right">
-                <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="./">Home</a>&nbsp;<i
+                <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="./staff-dashboard">Home</a>&nbsp;<i
                     class="fa fa-angle-right"></i>
                 </li>
                 <li class="active">Dashboard</li>
@@ -125,7 +122,7 @@
                 <div class="info-box bg-warning">
                   <span class="info-box-icon push-bottom"><i class="fa fa-bed fa-1x"></i></span>
                   <div class="info-box-content">
-                    <span class="info-box-text">Pending Booking</span>
+                    <span class="info-box-text">Pending CheckIn</span>
                     <span class="info-box-number"><?php echo number_format($Room->countPendingBookings(1)) ?></span>
                     <div class="progress">
                       <div class="progress-bar width-40"></div>

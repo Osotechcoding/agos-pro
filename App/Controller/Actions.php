@@ -156,8 +156,15 @@ if ($request_method === "POST") {
           echo $result;
         }
         break;
+
       case 'reject':
         $result = $Room->approveDisapproveCustomerBooking($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
+      case 'recject_booking_by_staff_':
+        $result = $Room->rejectCustomerBookingByStaff($_POST);
         if ($result) {
           echo $result;
         }

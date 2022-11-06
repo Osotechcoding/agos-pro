@@ -75,7 +75,8 @@ require_once "Helper/staffHelper.php";
                               <th class="center"> Check-Out </th>
                               <th class="center"> Room Type </th>
                               <th class="center">Total Biil</th>
-                              <th class="center"> Status </th>
+                              <th class="center">CheckIn Status </th>
+                              <th class="center">Approval </th>
 
                             </tr>
                           </thead>
@@ -119,6 +120,26 @@ require_once "Helper/staffHelper.php";
                                 <span class="label label-sm label-warning">Pending </span>
                               </td>
 
+                              <td class="center">
+                                <?php switch ($item->is_approved) {
+                                      case 1:
+                                        echo ' <span class="label label-sm label-success">Accepted </span>';
+                                        break;
+
+                                      case 2:
+                                        echo ' <span class="label label-sm label-danger">Rejected </span>';
+                                        break;
+
+                                      case 0:
+                                        echo ' <span class="label label-sm label-warning">Pending </span>';
+                                        break;
+
+                                      default:
+                                        echo ' <span class="label label-sm label-warning">Pending </span>';
+                                        break;
+                                    } ?>
+                              </td>
+
                             </tr>
                             <?php
                               }
@@ -150,12 +171,12 @@ require_once "Helper/staffHelper.php";
                               <th class="center"> Check-Out </th>
                               <th class="center"> Room Type </th>
                               <th class="center">Total Biil</th>
-                              <th class="center"> Status </th>
-                              <th class="center"> Action </th>
+                              <th class="center">CheckIn Status </th>
+                              <th class="center">Approval </th>
                             </tr>
                           </thead>
                           <tbody>
-                            <?php $allPendings = $Room->getAllBookingsByStaffIdByBookingStatus($logerId, 1);
+                            <?php $allPendings = $Room->getAllBookingsByStaffIdByBookingStatus("booking_tbl", $logerId, 0);
 
                             if ($allPendings) {
                               $cnt = 0;
@@ -198,8 +219,9 @@ require_once "Helper/staffHelper.php";
                                   data-action="approve_booking" class="btn btn-xs btn-success approve_btn">
                                   Approve
                                 </button>
-                                <button type="button" data-id="<?php echo $pending->id; ?>" data-action="reject_booking"
-                                  class="btn btn-xs btn-danger reject_btn">
+                                <button type="button"
+                                  onclick="window.location.href='reject-booking?bookingId=<?php echo $pending->id; ?>&cid=<?php echo $pending->customer_id; ?>&userId=<?php echo $logerId; ?>&roomId=<?php echo $pending->room_id; ?>&action=reject'"
+                                  class="btn btn-xs btn-danger">
                                   Reject
                                 </button>
                               </td>
@@ -240,7 +262,7 @@ require_once "Helper/staffHelper.php";
                             </tr>
                           </thead>
                           <tbody>
-                            <?php $allAccepted = $Room->getAllBookingsByStaffIdByBookingStatus($logerId, 2);
+                            <?php $allAccepted = $Room->getAllBookingsByStaffIdByBookingStatus("booking_tbl", $logerId, 1);
 
                             if ($allAccepted) {
                               $cnt = 0;
@@ -301,8 +323,7 @@ require_once "Helper/staffHelper.php";
                     <div class="card-body">
 
                       <div class="table-scrollable">
-                        <table
-                          class="table table-hover table-checkable order-column full-width text-center osotech_datatable">
+                        <table class="table table-checkable order-column full-width text-center osotech_datatable">
                           <thead>
                             <tr>
                               <th class="center">Ref Code</th>
@@ -313,11 +334,10 @@ require_once "Helper/staffHelper.php";
                               <th class="center"> Room Type </th>
                               <th class="center">Total Biil</th>
                               <th class="center"> Status </th>
-
                             </tr>
                           </thead>
                           <tbody>
-                            <?php $allRejected = $Room->getAllBookingsByStaffIdByBookingStatus($logerId, 3);
+                            <?php $allRejected = $Room->getallRejectedBookingsByStaff($logerId);
 
                             if ($allRejected) {
                               $cnt = 0;
@@ -328,7 +348,8 @@ require_once "Helper/staffHelper.php";
                             ?>
                             <tr class="odd gradeX">
                               <td class="center">
-                                <?php echo $rejected->ref_code; ?>
+                                <?php echo $rejected->ref_code;
+                                    ?>
                               </td>
                               <td class="center"><?php echo $customer_data->fullname; ?></td>
                               <td class="center"><a href="tel:<?php echo $customer_data->phone; ?>">

@@ -29,122 +29,41 @@
 	          </div>
 	        </li>
 	        <li class="menu-heading">
-	          <span class="text-center">DASHBOARD</span>
+	          <a href="./" class="nav-link ">
+	            <span class="text-center">DASHBOARD</span>
+	          </a>
 	        </li>
-
-
 	        <li class="nav-item">
-	          <a href="#" class="nav-link nav-toggle">
+	          <a href="view-booking-list" class="nav-link ">
 	            <i class="fa fa-bed"></i>
-	            <span class="title">Booking</span>
-	            <span class="arrow"></span>
+	            <span class="title">View Booking</span>
 	          </a>
-	          <ul class="sub-menu">
-	            <!-- <li class="nav-item">
-	              <a href="walkin-booking" class="nav-link ">
-	                <span class="title">New Booking</span>
-	              </a>
-	            </li> -->
-	            <li class="nav-item">
-	              <a href="view-booking-list" class="nav-link ">
-	                <span class="title">View Booking</span>
-	              </a>
-	            </li>
-
-	          </ul>
 	        </li>
 	        <li class="nav-item">
-	          <a href="#" class="nav-link nav-toggle">
+	          <a href="rooms" class="nav-link ">
 	            <i class="fa fa-bed"></i>
-	            <span class="title">Rooms</span>
-	            <span class="arrow"></span>
+	            <span class="title">View Rooms</span>
 	          </a>
-	          <ul class="sub-menu">
-	            <!-- <li class="nav-item">
-	              <a href="add-room" class="nav-link ">
-	                <span class="title">Add Room</span>
-	              </a>
-	            </li> -->
-	            <li class="nav-item">
-	              <a href="rooms" class="nav-link ">
-	                <span class="title">View Rooms</span>
-	              </a>
-	            </li>
-	          </ul>
 	        </li>
+
 	        <li class="nav-item">
-	          <a href="#" class="nav-link nav-toggle">
+	          <a href="view-manager" class="nav-link ">
 	            <i class="material-icons">group</i>
-	            <span class="title">Staff</span>
-	            <span class="arrow"></span>
+	            <span class="title">View Staff</span>
 	          </a>
-	          <ul class="sub-menu">
-	            <li class="nav-item">
-	              <a href="create-manager" class="nav-link ">
-	                <span class="title">Add Staff</span>
-	              </a>
-	            </li>
-	            <li class="nav-item">
-	              <a href="view-manager" class="nav-link ">
-	                <span class="title">View Staff</span>
-	              </a>
-	            </li>
-
-	          </ul>
 	        </li>
 	        <li class="nav-item">
-	          <a href="#" class="nav-link nav-toggle">
+	          <a href="view-customer" class="nav-link ">
 	            <i class="material-icons">group</i>
-	            <span class="title">Customers</span>
-	            <span class="arrow"></span>
+	            <span class="title">View Customers</span>
 	          </a>
-	          <ul class="sub-menu">
-	            <li class="nav-item">
-	              <a href="add-customer" class="nav-link ">
-	                <span class="title">New Customer</span>
-	              </a>
-	            </li>
-	            <li class="nav-item">
-	              <a href="view-customer" class="nav-link ">
-	                <span class="title">View Customers</span>
-	              </a>
-	            </li>
-
-	          </ul>
 	        </li>
 	        <li class="nav-item">
-	          <a href="#" class="nav-link nav-toggle">
-	            <i class="fa fa-credit-card"></i>
-	            <span class="title">Wallet</span>
-	            <span class="arrow"></span>
+	          <a href="generate" class="nav-link ">
+	            <i class="fa fa-credit-card" aria-hidden="true"></i>
+	            <span class="title">Generate Token</span>
 	          </a>
-	          <ul class="sub-menu">
-	            <li class="nav-item">
-	              <a href="generate" class="nav-link ">
-	                <span class="title">Generate Token</span>
-	              </a>
-	            </li>
-	          </ul>
 	        </li>
-
-	        <!-- <li class="nav-item">
-	          <a href="javascript:;" class="nav-link nav-toggle"> <i class="fa fa-line-chart"></i>
-	            <span class="title">Reports</span>
-	            <span class="arrow"></span>
-	          </a>
-	          <ul class="sub-menu">
-
-	            <li class="nav-item">
-	              <a href="sales_report" class="nav-link "><span class="title"> Sales</span>
-	              </a>
-	            </li>
-	            <li class="nav-item">
-	              <a href="invoice" class="nav-link "><span class="title">Activity Logs</span>
-	              </a>
-	            </li>
-
-	          </ul>
-	        </li> -->
 
 	      </ul>
 	    </div>

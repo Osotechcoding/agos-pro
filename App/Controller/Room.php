@@ -129,9 +129,9 @@ class Room
     }
   }
 
-  public function getAllBookingsByStaffIdByBookingStatus($logerId, $status)
+  public function getAllBookingsByStaffIdByBookingStatus($table, $logerId, $status)
   {
-    $sql = "SELECT * FROM `booking_tbl` WHERE bookedBy <> NULL OR bookedBy <> '' AND bookedBy=? AND `is_approved`=? ORDER BY created_at DESC LIMIT 200";
+    $sql = "SELECT * FROM `{$table}` WHERE bookedBy <> NULL OR bookedBy <> '' AND bookedBy=? AND `is_approved`=? ORDER BY created_at DESC LIMIT 200";
     $this->stmt = $this->dbh->prepare($sql);
     $this->stmt->execute([$logerId, $status]);
     if ($this->stmt->rowCount() > 0) {
@@ -141,9 +141,33 @@ class Room
     }
   }
 
+  public function getallRejectedBookingsByStaff($logerId)
+  {
+    $sql = "SELECT * FROM `rejected_booking_tbl` WHERE bookedBy <> NULL OR bookedBy <> '' AND bookedBy=? ORDER BY created_at DESC LIMIT 200";
+    $this->stmt = $this->dbh->prepare($sql);
+    $this->stmt->execute([$logerId]);
+    if ($this->stmt->rowCount() > 0) {
+      $this->response = $this->stmt->fetchAll();
+      return $this->response;
+      $this->dbh = null;
+    }
+  }
+
+  public function getallRejectedBookings()
+  {
+    $sql = "SELECT * FROM `rejected_booking_tbl` ORDER BY created_at DESC LIMIT 200";
+    $this->stmt = $this->dbh->prepare($sql);
+    $this->stmt->execute();
+    if ($this->stmt->rowCount() > 0) {
+      $this->response = $this->stmt->fetchAll();
+      return $this->response;
+      $this->dbh = null;
+    }
+  }
+
   public function getAllRecentBooking()
   {
-    $sql = "SELECT * FROM `booking_tbl` WHERE DATE(`created_at`)>= DATE(CURRENT_DATE()- INTERVAL 3 DAY) ORDER BY created_at DESC LIMIT 5";
+    $sql = "SELECT * FROM `booking_tbl` WHERE DATE(`created_at`) >= DATE(CURRENT_DATE()- INTERVAL 7 DAY) ORDER BY created_at DESC LIMIT 5";
     $this->stmt = $this->dbh->prepare($sql);
     $this->stmt->execute();
     if ($this->stmt->rowCount() > 0) {
@@ -286,6 +310,7 @@ class Room
       switch ($action) {
         case 'approve':
           $status = 2;
+
           $status_text = "Approved";
           break;
         case 'reject':
@@ -299,27 +324,32 @@ class Room
           break;
       }
       $customer_data = $this->Core->getSingleData("customers", "id", $cid);
-      $booking_data = $this->Core->getSingleData("booking_tbl", "id", $bookingId);
+      $bd = $this->Core->getSingleData("booking_tbl", "id", $bookingId);
       //$room_data = $this->Core->getSingleData("rooms_tbl", "id", $rid);
-      $total_charge_amount = $booking_data->total_bill;
+      $total_charge_amount = $bd->total_bill;
       $this->dbh->beginTransaction();
-
       if ($action === "reject") {
-        $this->stmt = $this->dbh->prepare("UPDATE `wallet_tbl` SET `balance`=balance+$total_charge_amount WHERE customer_id=? LIMIT 1");
-        if ($this->stmt->execute([$cid])) {
-          //update the room status
-          $this->stmt = $this->dbh->prepare("UPDATE `{$this->table}` SET `is_booked`=0 WHERE id=? LIMIT 1");
-          if ($this->stmt->execute([$rid])) {
-            $this->stmt = $this->dbh->prepare("DELETE FROM `booking_tbl` WHERE id=? LIMIT 1");
-            if ($this->stmt->execute([$bookingId])) {
-              if (sendBookingApproveNotificationToCustomer($status_text, $customer_data->email, $customer_data->fullname)) {
-                $this->dbh->commit();
-                $this->response = $this->Alert->flashMessage("SUCCESS", "Booking $status_text Successfully!", "success", "top-right") . $this->Core->pageReload();
+        $reject = '0';
+        $this->stmt = $this->dbh->prepare("INSERT INTO `rejected_booking_tbl` (customer_id,room_id,no_of_guest,no_of_children,checkIn,checkOut,status,ref_code,total_night,total_bill,payment_method,booking_time,comment,created_at,is_approved,bookedBy) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        if ($this->stmt->execute([$bd->customer_id, $bd->room_id, $bd->no_of_guest, $bd->no_of_children, $bd->checkIn, $bd->checkOut, $bd->status, $bd->ref_code, $bd->total_night, $bd->total_bill, $bd->payment_method, $bd->booking_time, $bd->comment, $bd->created_at, $reject, $bd->bookedBy])) {
+          //return customer booking charge to his/her wallet
+          $this->stmt = $this->dbh->prepare("UPDATE `wallet_tbl` SET `balance`=balance+$total_charge_amount WHERE customer_id=? LIMIT 1");
+          if ($this->stmt->execute([$cid])) {
+            //update the room status
+            $this->stmt = $this->dbh->prepare("UPDATE `{$this->table}` SET `is_booked`=0 WHERE id=? LIMIT 1");
+            if ($this->stmt->execute([$rid])) {
+              $this->stmt = $this->dbh->prepare("DELETE FROM `booking_tbl` WHERE id=? LIMIT 1");
+              if ($this->stmt->execute([$bookingId])) {
+                if (sendBookingApproveNotificationToCustomer($status_text, $customer_data->email, $customer_data->fullname)) {
+                  $this->dbh->commit();
+                  $this->response = $this->Alert->flashMessage("SUCCESS", "Booking $status_text Successfully!", "success", "top-right") . $this->Core->pageReload();
+                }
               }
             }
           }
         }
       } else {
+        $status = 1;
         $this->stmt = $this->dbh->prepare("UPDATE `booking_tbl` SET `is_approved`=? WHERE id=? LIMIT 1");
         if ($this->stmt->execute([$status, $bookingId])) {
           if (sendBookingApproveNotificationToCustomer($status_text, $customer_data->email, $customer_data->fullname)) {
@@ -332,6 +362,51 @@ class Room
       $this->dbh->rollback();
       $this->response = $this->Alert->flashMessage("ERROR", "Something went wrong!: " . $e->getMessage(), "error", "top-right");
     }
+    return $this->response;
+    $this->dbh = null;
+  }
+
+  public function rejectCustomerBookingByStaff($data)
+  {
+    $bookingId = $this->Core->sanitise_string($data['bookingId']);
+    $cid = $this->Core->sanitise_string($data['customerId']);
+    $rid = $this->Core->sanitise_string($data['rId']);
+    $message = $this->Core->sanitise_string($data['reject_message']);
+    $userId = $this->Core->sanitise_string($data['userId']);
+    $customer_data = $this->Core->getSingleData("customers", "id", $cid);
+    $bd = $this->Core->getSingleData("booking_tbl", "id", $bookingId);
+    $total_charge_amount = $bd->total_bill;
+    if ($this->Core->isEmptyStr($message)) {
+      $this->response = $this->Alert->alertMessage("AGOS Says", "Reason for rejecting the booking is required!", "danger");
+    } else {
+      try {
+        $this->dbh->beginTransaction();
+        $reject = '0';
+        $this->stmt = $this->dbh->prepare("INSERT INTO `rejected_booking_tbl` (customer_id,room_id,no_of_guest,no_of_children,checkIn,checkOut,status,ref_code,total_night,total_bill,payment_method,booking_time,comment,created_at,is_approved,bookedBy) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        if ($this->stmt->execute([$bd->customer_id, $bd->room_id, $bd->no_of_guest, $bd->no_of_children, $bd->checkIn, $bd->checkOut, $bd->status, $bd->ref_code, $bd->total_night, $bd->total_bill, $bd->payment_method, $bd->booking_time, $bd->comment, $bd->created_at, $reject, $userId])) {
+          //return customer booking charge to his/her wallet
+          $this->stmt = $this->dbh->prepare("UPDATE `wallet_tbl` SET `balance`=balance+$total_charge_amount WHERE customer_id=? LIMIT 1");
+          if ($this->stmt->execute([$cid])) {
+            //update the room status
+            $this->stmt = $this->dbh->prepare("UPDATE `{$this->table}` SET `is_booked`=0 WHERE id=? LIMIT 1");
+            if ($this->stmt->execute([$rid])) {
+              $this->stmt = $this->dbh->prepare("DELETE FROM `booking_tbl` WHERE id=? LIMIT 1");
+              if ($this->stmt->execute([$bookingId])) {
+                $status_text = "Rejected";
+                if (sendRejectBookingNotificationToCustomer($status_text, $customer_data->email, $customer_data->fullname, $message)) {
+                  $this->dbh->commit();
+                  $this->response = $this->Alert->alertMessage("SUCCESS", "Booking $status_text Successfully!", "success") . $this->Core->accountActivationRedirect("./bookings");
+                }
+              }
+            }
+          }
+        }
+      } catch (PDOException $e) {
+        $this->dbh->rollback();
+        $this->response = $this->Alert->alertMessage("ERROR", "Something went wrong!: " . $e->getMessage(), "danger");
+      }
+    }
+
     return $this->response;
     $this->dbh = null;
   }

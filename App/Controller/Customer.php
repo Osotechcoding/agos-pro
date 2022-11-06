@@ -87,7 +87,7 @@ class Customer
     } else {
       //create all neccesary data needed for booking
       $customer_data = self::getCustomerById($cid);
-      $ref_code = date("YmdHis") . mt_rand(1000, 9999);
+      $ref_code = date("ymdhis") . mt_rand(1, 99);
       $start_datetime = new DateTime($checkIn);
       $diff = $start_datetime->diff(new DateTime($checkOut));
       $no_of_nights = $diff->d;
@@ -153,7 +153,7 @@ class Customer
     } else {
       //create all neccesary data needed for booking
       $customer_data = self::getCustomerById($cid);
-      $ref_code = date("Ymdhis") . mt_rand(111, 999);
+      $ref_code = date("ymdhis") . mt_rand(1, 9);
       $start_datetime = new DateTime($checkIn);
       $diff = $start_datetime->diff(new DateTime($checkOut));
       $no_of_nights = $diff->d;

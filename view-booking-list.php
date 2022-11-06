@@ -152,7 +152,7 @@ require_once "Helper/helper.php";
                             </tr>
                           </thead>
                           <tbody>
-                            <?php $allPendings = $Room->getAllBookingByStatus(1);
+                            <?php $allPendings = $Room->getAllBookingByStatus(0);
 
                             if ($allPendings) {
                               $cnt = 0;
@@ -225,8 +225,7 @@ require_once "Helper/helper.php";
                     <div class="card-body">
 
                       <div class="table-scrollable">
-                        <table
-                          class="table table-hover table-checkable order-column full-width text-center osotech_datatable">
+                        <table class="table table-checkable order-column full-width text-center osotech_datatable">
                           <thead>
                             <tr>
                               <th class="center">Ref Code</th>
@@ -241,7 +240,7 @@ require_once "Helper/helper.php";
                             </tr>
                           </thead>
                           <tbody>
-                            <?php $allAccepted = $Room->getAllBookingByStatus(2);
+                            <?php $allAccepted = $Room->getAllBookingByStatus(1);
 
                             if ($allAccepted) {
                               $cnt = 0;
@@ -302,8 +301,7 @@ require_once "Helper/helper.php";
                     <div class="card-body">
 
                       <div class="table-responsive">
-                        <table
-                          class="table table-hover table-checkable order-column full-width text-center osotech_datatable">
+                        <table class="table table-checkable order-column full-width text-center osotech_datatable">
                           <thead>
                             <tr>
                               <th class="center">Ref Code</th>
@@ -314,11 +312,10 @@ require_once "Helper/helper.php";
                               <th class="center"> Room Type </th>
                               <th class="center">Total Biil</th>
                               <th class="center"> Status </th>
-
                             </tr>
                           </thead>
                           <tbody>
-                            <?php $allRejected = $Room->getAllBookingByStatus(3);
+                            <?php $allRejected = $Room->getallRejectedBookings();
 
                             if ($allRejected) {
                               $cnt = 0;

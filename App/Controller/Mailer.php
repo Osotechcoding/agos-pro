@@ -197,3 +197,32 @@ The AGOS Team";
     return false;
   }
 }
+
+function sendRejectBookingNotificationToCustomer($status, $email, $name, $message)
+{
+  $message_body = "Hello <b>$name</b>,\r\n \r\n Your Booking with AGOS Hotel was  <b>$status</b> due to the following reason.\r\n \r\n
+  \r\n \r\n <i>$message</i>
+We are so sorry for any inconvenience.\r\n \r\n
+\r\n \r\n
+The AGOS Team";
+  $phpmailer = new PHPMailer(true);
+  $phpmailer->SMTPDebug = 0;
+  $phpmailer->isSMTP();
+  $phpmailer->Host = 'smtp.mailtrap.io';
+  $phpmailer->SMTPAuth = true;
+  $phpmailer->Port = 2525;
+  $phpmailer->Username = '71f8d31ac958eb';
+  $phpmailer->Password = '5479f82c1922d6';
+  $phpmailer->setFrom('admin@agos.com', 'Admin');
+  $phpmailer->addAddress($email, $name);
+  $phpmailer->addReplyTo("osoetchcoding@gmail.com", "Osotech");
+  $phpmailer->Subject = "Booking $status Notification";
+  $phpmailer->isHTML(true);   //Set email format to HTML
+  $phpmailer->Body    = $message_body;
+  $phpmailer->AltBody = $message_body;
+  if ($phpmailer->send()) {
+    return true;
+  } else {
+    return false;
+  }
+}
