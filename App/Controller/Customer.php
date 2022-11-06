@@ -69,8 +69,6 @@ class Customer
 
   public function walkInClientBooking(array $data)
   {
-    $price = (float)$this->Core->sanitise_string($data['room_price']);
-    $wallet_bal = (float)$this->Core->sanitise_string($data['cus_balance']);
     $room_id = $this->Core->sanitise_string($data['room_id']);
     $checkIn = $this->Core->sanitise_string(date("Y-m-d", strtotime($data['check_in_date'])));
     $checkOut =
@@ -79,21 +77,23 @@ class Customer
     $no_child = $this->Core->sanitise_string($data['no_of_kids']) ?? "0";
     $comment = $this->Core->sanitise_string($data['comment']) ?? NULL;
     $cid = $this->Core->sanitise_string($data['customer_id']);
+    $bookedBy = $this->Core->sanitise_string($data['user_id']);
     //check for empty values
-    if ($this->Core->isEmptyStr($room_id) || $this->Core->isEmptyStr($checkIn) || $this->Core->isEmptyStr($checkOut) || $this->Core->isEmptyStr($no_guest) || $this->Core->isEmptyStr($price) || $this->Core->isEmptyStr($cid) || $this->Core->isEmptyStr($wallet_bal)) {
-      $this->response = $this->Alert->flashMessage("AGOS Says", "Invalid Submission, All feilds are required!", "error", "top-right");
-    } else if ($price > $wallet_bal) {
-      $this->response = $this->Alert->flashMessage("Notice:", "Your Wallet Balance is too Low for this booking, Please recharge your wallet and try again!", "error", "top-right");
+    if ($this->Core->isEmptyStr($room_id) || $this->Core->isEmptyStr($checkIn) || $this->Core->isEmptyStr($checkOut) || $this->Core->isEmptyStr($no_guest) || $this->Core->isEmptyStr($cid)) {
+      $this->response = $this->Alert->flashMessage("WARNING", "Invalid Submission, All feilds are required!", "error", "top-right");
     } else {
       //create all neccesary data needed for booking
       $customer_data = self::getCustomerById($cid);
+      $room_data = $this->Core->getSingleData("rooms_tbl", "id", $room_id);
+      $wallet_data = $this->Core->getSingleData("wallet_tbl", "customer_id", $cid);
+      $wallet_bal = $wallet_data->balance;
       $ref_code = date("ymdhis") . mt_rand(1, 99);
       $start_datetime = new DateTime($checkIn);
       $diff = $start_datetime->diff(new DateTime($checkOut));
       $no_of_nights = $diff->d;
       $booking_status = 1;
       $payment_method = "Wallet";
-      $total_bill = (float)($price * $no_of_nights);
+      $total_bill = (float)($room_data->price * $no_of_nights);
       if ($total_bill > $wallet_bal) {
         $this->response = $this->Alert->flashMessage("Notice:", "Wallet Balance is too Low for this reservation, Please recharge your wallet and try again!", "error", "top-right");
       } else {
@@ -101,11 +101,12 @@ class Customer
         $created_at = date("Y-m-d");
         try {
           $this->dbh->beginTransaction();
-          $sql = "INSERT INTO `booking_tbl` (customer_id,room_id,no_of_guest,no_of_children,checkIn,checkOut,`status`,ref_code,total_night,total_bill,payment_method,booking_time,comment,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+          $is_approved = '0';
+          $sql = "INSERT INTO `booking_tbl` (customer_id,room_id,no_of_guest,no_of_children,checkIn,checkOut,`status`,ref_code,total_night,total_bill,payment_method,booking_time,comment,created_at,is_approved,bookedBy) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
           $this->stmt = $this->dbh->prepare($sql);
-          if ($this->stmt->execute([$cid, $room_id, $no_guest, $no_child, $checkIn, $checkOut, $booking_status, $ref_code, $no_of_nights, $total_bill, $payment_method, $time, $comment, $created_at])) {
+          if ($this->stmt->execute([$cid, $room_id, $no_guest, $no_child, $checkIn, $checkOut, $booking_status, $ref_code, $no_of_nights, $total_bill, $payment_method, $time, $comment, $created_at, $is_approved, $bookedBy])) {
             //update room to booked 
-            $sql = "UPDATE `rooms_tbl` SET is_booked =? WHERE id=? LIMIT 1";
+            $sql = "UPDATE `rooms_tbl` SET `is_booked`=? WHERE `id`=? LIMIT 1";
             $this->stmt = $this->dbh->prepare($sql);
             if ($this->stmt->execute([$booking_status, $room_id])) {
               //update customer wallet 
@@ -116,7 +117,7 @@ class Customer
                 //send booking email to user
                 if (sendReservationBookingInfoToCustomer($customer_data->fullname, $customer_data->email, $ref_code, $checkIn, $checkOut)) {
                   $this->dbh->commit();
-                  $this->response = $this->Alert->flashMessage("SUCCESS:", "Reservation was Successful, Check your inbox at $customer_data->email for details!", "success", "top-right");
+                  $this->response = $this->Alert->flashMessage("SUCCESS:", "Reservation was Successful, Check your inbox at $customer_data->email for details!", "success", "top-right") . $this->Core->accountActivationRedirect("user-dashboard");;
                 }
               }
             }
@@ -606,6 +607,22 @@ class Customer
     } catch (PDOException $e) {
       $this->dbh->rollback();
       $this->response = $this->Alert->flashMessage("ERROR", "Something went wrong!: " . $e->getMessage(), "error", "top-right");
+    }
+    return $this->response;
+    $this->dbh = null;
+  }
+
+  public function getAllCustomerInDropDownList()
+  {
+    $this->response = "";
+    $this->stmt = $this->dbh->prepare("SELECT * FROM `{$this->table}` ORDER BY fullname ASC");
+    $this->stmt->execute();
+    if ($this->stmt->rowCount() > 0) {
+      while ($row = $this->stmt->fetch()) {
+        $this->response .= '<option value="' . $row->id . '">' . $row->fullname . ' &raquo; ' . $row->phone . '</option>';
+      }
+    } else {
+      $this->response = false;
     }
     return $this->response;
     $this->dbh = null;
