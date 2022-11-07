@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2022 at 10:45 PM
+-- Generation Time: Nov 07, 2022 at 01:07 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 7.4.23
 
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `admin_tbl` (
 --
 
 INSERT INTO `admin_tbl` (`id`, `username`, `email`, `password`, `fullname`, `role_type`, `status`, `verified`, `is_online`, `created_at`) VALUES
-(1, 'Osotech', 'admin@agos.com', '$2y$10$yJXS7SIQ2mGTj6Y9d4ebvO0oeeKwkWGWEsNDsDwjyheaTL9nrsfwy', 'Osotech Samson', 'Admin', 1, 1, 1, '2022-11-02');
+(1, 'Osotech', 'admin@agos.com', '$2y$10$yJXS7SIQ2mGTj6Y9d4ebvO0oeeKwkWGWEsNDsDwjyheaTL9nrsfwy', 'Osotech Samson', 'Admin', 1, 1, 0, '2022-11-02');
 
 -- --------------------------------------------------------
 
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `recharge_history` (
   `created_at` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `customer_id` (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `rooms_tbl` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `room_name` varchar(255) NOT NULL,
   `room_type` varchar(255) NOT NULL,
-  `price` decimal(7,2) NOT NULL COMMENT 'price of the room per night',
+  `price` float NOT NULL COMMENT 'price of the room per night',
   `room_desc` mediumtext NOT NULL,
   `facilities` text NOT NULL,
   `firstImage` varchar(255) NOT NULL,
@@ -352,7 +352,7 @@ CREATE TABLE IF NOT EXISTS `wallet_tbl` (
   `created_at` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `customer_id` (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Constraints for dumped tables
