@@ -7,7 +7,7 @@ require_once "Helper/helper.php";
 
 <head>
   <?php include_once "Inc/MetaTag.php"; ?>
-  <title> Customers</title>
+  <title> CheckIn - CheckOut Customers</title>
   <!-- icons -->
   <?php include_once("Inc/DatatableHeaderScript.php"); ?>
 </head>
