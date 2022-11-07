@@ -6,8 +6,9 @@ require_once "Helper/helper.php";
 <!-- BEGIN HEAD -->
 
 <head>
-  <?php include_once "Inc/MetaTag.php"; ?>
-  <title>Rooms</title>
+  <?php
+  include_once "Inc/MetaTag.php"; ?>
+  <title> Booking List</title>
   <!-- icons -->
   <?php include_once("Inc/DatatableHeaderScript.php"); ?>
 </head>
@@ -31,82 +32,345 @@ require_once "Helper/helper.php";
           <div class="page-bar">
             <div class="page-title-breadcrumb">
               <div class=" pull-left">
-                <div class="page-title">Rooms</div>
+                <div class="page-title"><span class="fa fa-users fa-1x"></span> All Bookings</div>
               </div>
               <ol class="breadcrumb page-breadcrumb pull-right">
                 <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="./">Home</a>&nbsp;<i
                     class="fa fa-angle-right"></i>
                 </li>
-                <li><a class="parent-item" href="#">Rooms</a>&nbsp;<i class="fa fa-angle-right"></i>
+                <li><a class="parent-item" href="#">Bookings</a>&nbsp;<i class="fa fa-angle-right"></i>
                 </li>
-                <li class="active"> Rooms</li>
+                <li class="active">All Bookings</li>
               </ol>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card card-box">
-                <div class="card-head">
-                  <header> Rooms</header>
-                  <div class="tools">
-                    <a class="fa fa-repeat btn-color box-refresh" href="javascript:;"></a>
-                    <a class="t-collapse btn-color fa fa-chevron-down" href="javascript:;"></a>
-                    <a class="t-close btn-color fa fa-times" href="javascript:;"></a>
-                  </div>
-                </div>
-                <div class="card-body ">
-                  <div class="row p-b-20">
-                    <div class="col-md-6 col-sm-6 col-6">
-                      <div class="btn-group">
-                        <a href="add-room" id="addRow" class="btn btn-info">
-                          Add New <i class="fa fa-plus"></i>
-                        </a>
+          <ul class="nav nav-pills nav-pills-rose">
+            <li class="nav-item tab-all"><a class="nav-link active show" href="#tab4" data-bs-toggle="tab">All
+              </a>
+            </li>
+            <li class="nav-item tab-all"><a class="nav-link show" href="#tab1" data-bs-toggle="tab">Pending
+              </a>
+            </li>
+            <li class="nav-item tab-all"><a class="nav-link" href="#tab2" data-bs-toggle="tab">Accepted </a>
+            </li>
+            <li class="nav-item tab-all"><a class="nav-link" href="#tab3" data-bs-toggle="tab">Rejected</a>
+            </li>
+          </ul>
+          <div class="tab-content tab-space">
+            <div class="tab-pane active show" id="tab4">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card-box">
+
+                    <div class="card-body">
+
+                      <div class="table-scrollable table-responsive">
+                        <table class="table table-checkable order-column full-width text-center osotech_datatable">
+                          <thead>
+                            <tr>
+                              <th class="center">Booking Id</th>
+                              <th class="center"> Customer </th>
+                              <th class="center"> Mobile & Email </th>
+                              <th class="center"> Check-In </th>
+                              <th class="center"> Check-Out </th>
+                              <th class="center"> Room Type </th>
+                              <th class="center">Total Biil</th>
+                              <th class="center"> Approval </th>
+
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <?php $all = $Room->getAllBookings();
+                            if ($all) {
+                              $cnt = 0;
+                              foreach ($all as $item) {
+                                $customer_data = $Customer->getCustomerById($item->customer_id);
+                                $room_data = $Room->getRoomById($item->room_id);
+                                $cnt++;
+                            ?>
+                            <tr class="odd gradeX">
+                              <td class="center">
+                                <?php echo $item->ref_code; ?>
+                              </td>
+                              <td class="center"><?php echo $customer_data->fullname; ?></td>
+                              <td class="center"><a href="tel:<?php echo $customer_data->phone; ?>">
+                                  <?php echo $customer_data->phone; ?> </a><br><a
+                                  href="mailto:<?php echo $customer_data->email; ?>">
+                                  <?php echo $customer_data->email; ?> </a></td>
+                              <td class="center"><?php echo date("Y-m-d", strtotime($item->checkIn)); ?></td>
+                              <td class="center"><?php echo date("Y-m-d", strtotime($item->checkOut)); ?></td>
+                              <td class="center"><?php echo $room_data->room_name; ?><br />
+                                <?php echo $room_data->room_type; ?><br />
+                                <span
+                                  class="label label-sm label-info">&#8358;<?php echo number_format($room_data->price, 2); ?>
+                                  per
+                                  Night
+                                </span>
+                              </td>
+                              <td class="center"><span
+                                  class="label label-sm label-info">&#8358;<?php echo number_format($item->total_bill, 2); ?>
+                                </span><br />
+                                <span class="label label-sm label-success"><?php echo $item->total_night; ?>
+                                  Night</span>
+
+                              </td>
+                              <td class="center">
+                                <?php
+                                    if ($item->is_approved == "0") {
+                                      echo '<span class="label label-sm label-warning">Pending</span>';
+                                    } elseif ($item->is_approved == "1") {
+                                      echo '<span class="label label-sm label-success">Approved</span>';
+                                    } else {
+                                      echo '<span class="label label-sm label-danger">Rejected</span>';
+                                    }
+                                    ?>
+                                <!-- <span class="label label-sm label-warning">Pending </span> -->
+                              </td>
+
+                            </tr>
+                            <?php
+                              }
+                            }
+                            ?>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   </div>
-                  <div class="table-scrollable">
-                    <table class="table table-hover table-checkable order-column full-width" id="example4">
-                      <thead>
-                        <tr>
-                          <th class="center">Ref Code</th>
-                          <th class="center"> Customer </th>
-                          <th class="center"> Mobile & Email </th>
-                          <th class="center"> Check-In </th>
-                          <th class="center"> Check-Out </th>
-                          <th class="center"> Room Type </th>
-                          <th class="center">Total Biil</th>
-                          <th class="center"> Payment </th>
-                          <th class="center"> Delete </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr class="odd gradeX">
-                          <td>
-                            63337648
-                          </td>
-                          <td class="center">Rajesh</td>
-                          <td class="center"><a href="tel:4444565756">
-                              4444565756 </a><br><a href="mailto:rajesh@gmail.com ">
-                              rajesh@gmail.com </a></td>
-                          <td class="center">23/04/2017</td>
-                          <td class="center">25/04/2017</td>
-                          <td class="center">Single</td>
-                          <td class="center">&#8358; 40,000.00</td>
-                          <td class="center">
-                            <span class="label label-sm label-success">Paid </span>
-                          </td>
-                          <td class="center">
-                            <button type="button" class="btn btn-xs btn-dark">
-                              <i class="fa fa-edit"></i>
-                            </button>
-                            <button type="button" class="btn btn-xs btn-danger">
-                              <i class="fa fa-trash-o"></i>
-                            </button>
-                          </td>
-                        </tr>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane show" id="tab1">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card-box">
+                    <div class="card-body">
+                      <div class="table-scrollable table-responsive">
+                        <table class="table table-checkable order-column full-width text-center osotech_datatable">
+                          <thead>
+                            <tr>
+                              <th class="center">Booking Id</th>
+                              <th class="center"> Customer </th>
+                              <th class="center"> Mobile & Email </th>
+                              <th class="center"> Check-In </th>
+                              <th class="center"> Check-Out </th>
+                              <th class="center"> Room Type </th>
+                              <th class="center">Total Biil</th>
+                              <th class="center"> Status </th>
+                              <th class="center"> Action </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <?php $allPendings = $Room->getAllBookingByStatus(0);
 
-                      </tbody>
-                    </table>
+                            if ($allPendings) {
+                              $cnt = 0;
+                              foreach ($allPendings as $pending) {
+                                $customer_data = $Customer->getCustomerById($pending->customer_id);
+                                $room_data = $Room->getRoomById($pending->room_id);
+                                $cnt++;
+                            ?>
+                            <tr class="odd gradeX">
+                              <td class="center">
+                                <?php echo $pending->ref_code; ?>
+                              </td>
+                              <td class="center"><?php echo $customer_data->fullname; ?></td>
+                              <td class="center"><a href="tel:<?php echo $customer_data->phone; ?>">
+                                  <?php echo $customer_data->phone; ?> </a><br><a
+                                  href="mailto:<?php echo $customer_data->email; ?>">
+                                  <?php echo $customer_data->email; ?> </a></td>
+                              <td class="center"><?php echo date("Y-m-d", strtotime($pending->checkIn)); ?></td>
+                              <td class="center"><?php echo date("Y-m-d", strtotime($pending->checkOut)); ?></td>
+                              <td class="center"><?php echo $room_data->room_name; ?><br />
+                                <?php echo $room_data->room_type; ?><br />
+                                <span
+                                  class="label label-sm label-info">&#8358;<?php echo number_format($room_data->price, 2); ?>
+                                  per
+                                  Night
+                                </span>
+                              </td>
+                              <td class="center"><span
+                                  class="label label-sm label-info">&#8358;<?php echo number_format($pending->total_bill, 2); ?>
+                                </span><br />
+                                <span class="label label-sm label-success"><?php echo $pending->total_night; ?>
+                                  Night</span>
+
+                              </td>
+                              <td class="center">
+                                <span class="label label-sm label-warning">Pending </span>
+                              </td>
+                              <td class="center">
+                                <button type="button" data-id="<?php echo $pending->id; ?>"
+                                  data-room="<?php echo $pending->room_id; ?>"
+                                  data-username="<?php echo $pending->customer_id; ?>" data-action="approve"
+                                  class="btn btn-xs btn-success approve_btn">
+                                  Approve
+                                </button>
+                                <button type="button" data-room="<?php echo $pending->room_id; ?>"
+                                  data-username="<?php echo $pending->customer_id; ?>"
+                                  data-id="<?php echo $pending->id; ?>" data-action="reject"
+                                  class="btn btn-xs btn-danger reject_btn">
+                                  Reject
+                                </button>
+                              </td>
+                            </tr>
+                            <?php
+                              }
+                            }
+                            ?>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane show" id="tab2">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card-box">
+
+                    <div class="card-body">
+
+                      <div class="table-scrollable">
+                        <table class="table table-checkable order-column full-width text-center osotech_datatable">
+                          <thead>
+                            <tr>
+                              <th class="center">Ref Code</th>
+                              <th class="center"> Customer </th>
+                              <th class="center"> Mobile & Email </th>
+                              <th class="center"> Check-In </th>
+                              <th class="center"> Check-Out </th>
+                              <th class="center"> Room Type </th>
+                              <th class="center">Total Biil</th>
+                              <th class="center"> Status </th>
+
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <?php $allAccepted = $Room->getAllBookingByStatus(1);
+
+                            if ($allAccepted) {
+                              $cnt = 0;
+                              foreach ($allAccepted as $approved) {
+                                $customer_data = $Customer->getCustomerById($approved->customer_id);
+                                $room_data = $Room->getRoomById($approved->room_id);
+                                $cnt++;
+                            ?>
+                            <tr class="odd gradeX">
+                              <td class="center">
+                                <?php echo $approved->ref_code; ?>
+                              </td>
+                              <td class="center"><?php echo $customer_data->fullname; ?></td>
+                              <td class="center"><a href="tel:<?php echo $customer_data->phone; ?>">
+                                  <?php echo $customer_data->phone; ?> </a><br><a
+                                  href="mailto:<?php echo $customer_data->email; ?>">
+                                  <?php echo $customer_data->email; ?> </a></td>
+                              <td class="center"><?php echo date("Y-m-d", strtotime($approved->checkIn)); ?></td>
+                              <td class="center"><?php echo date("Y-m-d", strtotime($approved->checkOut)); ?></td>
+                              <td class="center"><?php echo $room_data->room_name; ?><br />
+                                <?php echo $room_data->room_type; ?><br />
+                                <span
+                                  class="label label-sm label-info">&#8358;<?php echo number_format($room_data->price, 2); ?>
+                                  per
+                                  Night
+                                </span>
+                              </td>
+                              <td class="center"><span
+                                  class="label label-sm label-info">&#8358;<?php echo number_format($approved->total_bill, 2); ?>
+                                </span><br />
+                                <span class="label label-sm label-success"><?php echo $approved->total_night; ?>
+                                  Night</span>
+
+                              </td>
+                              <td class="center">
+                                <span class="label label-sm label-success">Approved </span>
+                              </td>
+
+                            </tr>
+                            <?php
+                              }
+                            }
+                            ?>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane show" id="tab3">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card-box">
+
+                    <div class="card-body">
+
+                      <div class="table-responsive">
+                        <table class="table table-checkable order-column full-width text-center osotech_datatable">
+                          <thead>
+                            <tr>
+                              <th class="center">Ref Code</th>
+                              <th class="center"> Customer </th>
+                              <th class="center"> Mobile & Email </th>
+                              <th class="center"> Check-In </th>
+                              <th class="center"> Check-Out </th>
+                              <th class="center"> Room Type </th>
+                              <th class="center">Total Biil</th>
+                              <th class="center"> Status </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <?php $allRejected = $Room->getallRejectedBookings();
+
+                            if ($allRejected) {
+                              $cnt = 0;
+                              foreach ($allRejected as $rejected) {
+                                $customer_data = $Customer->getCustomerById($rejected->customer_id);
+                                $room_data = $Room->getRoomById($rejected->room_id);
+                                $cnt++;
+                            ?>
+                            <tr class="odd gradeX">
+                              <td class="center">
+                                <?php echo $rejected->ref_code; ?>
+                              </td>
+                              <td class="center"><?php echo $customer_data->fullname; ?></td>
+                              <td class="center"><a href="tel:<?php echo $customer_data->phone; ?>">
+                                  <?php echo $customer_data->phone; ?> </a><br><a
+                                  href="mailto:<?php echo $customer_data->email; ?>">
+                                  <?php echo $customer_data->email; ?> </a></td>
+                              <td class="center"><?php echo date("Y-m-d", strtotime($rejected->checkIn)); ?></td>
+                              <td class="center"><?php echo date("Y-m-d", strtotime($rejected->checkOut)); ?></td>
+                              <td class="center"><?php echo $room_data->room_name; ?><br />
+                                <?php echo $room_data->room_type; ?><br />
+                                <span
+                                  class="label label-sm label-info">&#8358;<?php echo number_format($room_data->price, 2); ?>
+                                  per
+                                  Night
+                                </span>
+                              </td>
+                              <td class="center"><span
+                                  class="label label-sm label-info">&#8358;<?php echo number_format($rejected->total_bill, 2); ?>
+                                </span><br />
+                                <span class="label label-sm label-success"><?php echo $rejected->total_night; ?>
+                                  Night</span>
+
+                              </td>
+                              <td class="center">
+                                <span class="label label-sm label-danger">Rejected </span>
+                              </td>
+                            </tr>
+                            <?php
+                              }
+                            }
+                            ?>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -114,13 +378,45 @@ require_once "Helper/helper.php";
           </div>
         </div>
       </div>
-      <!-- end page content -->
     </div>
-    <!-- end page container -->
     <?php include_once "Inc/Footer.php"; ?>
   </div>
-  <!-- start js include path -->
   <?php include_once "Inc/DatatableFooterScript.php"; ?>
+  <script>
+  $(document).ready(function() {
+    $(".osotech_datatable").dataTable();
+    let rejectBtn = $(".reject_btn");
+    approveCustomerBooking(rejectBtn);
+
+    let approveBtn = $(".approve_btn");
+    approveCustomerBooking(approveBtn);
+  });
+
+  function approveCustomerBooking(actionBtn) {
+    actionBtn.on("click", function() {
+      let bookingId = $(this).data("id");
+      let action = $(this).data("action");
+      let customer_id = $(this).data("username");
+      let rId = $(this).data("room");
+      if (confirm(`Are you sure, You want to ${action} this Booking?`)) {
+        //send request
+        $.post("App/Controller/Actions", {
+          action: action,
+          bookingId: bookingId,
+          customerId: customer_id,
+          rId: rId
+        }, (response) => {
+          setTimeout(() => {
+            console.log(response);
+            $("#server-response").html(response);
+          }, 500);
+        });
+      } else {
+        return false;
+      }
+    });
+  }
+  </script>
 </body>
 
 </html>

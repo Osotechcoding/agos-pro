@@ -102,9 +102,8 @@ require_once "Helper/helper.php";
                             <?php echo (bool)$room->is_booked == '0' ? '<span class="badge badge-success badge-pill">Available</span>' : ' <span class="badge badge-danger badge-pill">Booked</span>'; ?>
                           </td>
                           <td class="center">
-                            <a class="btn btn-tbl-delete btn-circle deepPink-bgcolor btn-xs">
-                              <i class="fa fa-trash-o "></i>
-                            </a>
+                            <button type="button" data-id="<?php echo $room->id; ?>" data-action="delete_room"
+                              class="btn btn-circle delete_room_btn deepPink-bgcolor btn-sm osotech_action_<?php echo $room->id; ?>">Delete</button>
                           </td>
                         </tr>
                         <?php
@@ -127,6 +126,37 @@ require_once "Helper/helper.php";
   </div>
   <!-- start js include path -->
   <?php include_once "Inc/DatatableFooterScript.php"; ?>
+
+  <script>
+  $(document).ready(function() {
+    let delete_room_btn = $(".delete_room_btn");
+    deleteRoom(delete_room_btn);
+  });
+
+  function deleteRoom(delbtn) {
+    delbtn.on("click", function() {
+      let rId = $(this).data("id");
+      let action = $(this).data("action");
+      if (confirm('Are you sure, You want to delete this Room?')) {
+        $(".osotech_action_" + rId).html("Loading...").attr("disabled", true);
+        //send request
+        $.post("App/Controller/Actions", {
+          action: action,
+          roomId: rId
+        }, (response) => {
+          $(".osotech_action_" + rId).html('Delete').attr("disabled", false);
+          setTimeout(() => {
+            // console.log(response);
+            $("#server-response").html(response);
+          }, 3000);
+        });
+      } else {
+        return false;
+      }
+
+    });
+  }
+  </script>
 </body>
 
 </html>

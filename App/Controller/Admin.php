@@ -89,4 +89,49 @@ class Admin
       $this->dbh = null;
     }
   }
+
+  public function updateMyPassword($data)
+  {
+    $cid = $this->Core->sanitise_string($data['uid']);
+    $email = $this->Core->sanitise_string($data['uemail']);
+    $old_pass = $this->Core->sanitise_string($data['current_pass']);
+    $pass = $this->Core->sanitise_string($data['newpassword']);
+    $cpass = $this->Core->sanitise_string($data['cnewpassword']);
+    if ($this->Core->isEmptyStr($email) || $this->Core->isEmptyStr($cid) || $this->Core->isEmptyStr($old_pass) || $this->Core->isEmptyStr($pass) || $this->Core->isEmptyStr($cpass)) {
+      $this->response = $this->Alert->alertMessage("WARNING:", "Invalid Submission", "danger");
+    } else if (strlen($pass) <= 6) {
+      $this->response =  $this->Alert->alertMessage("WARNING:", "Password should be atleast seven character long!", "danger");
+    } else if ($pass !== $cpass) {
+      $this->response = $this->Alert->alertMessage("WARNING:", "The two password do not match!", "danger");
+    } else {
+      //get customer data from db via cid
+      $admin_data = $this->getAdminById($cid);
+      $db_password = $admin_data->password;
+      if (!$this->Core->compareTwoHashedPasswords($old_pass, $db_password)) {
+        $this->response = $this->Alert->alertMessage("WARNING:", "Your old account password is Incorrect!", "danger");
+      } else {
+        //update the password and log the user out
+        try {
+          $this->dbh->beginTransaction();
+          $hashed_pass = $this->Core->encryptUserPassword($pass);
+          $sql_update = "UPDATE `{$this->table}` SET `password`=? WHERE id=? AND email=? LIMIT 1";
+          $this->stmt = $this->dbh->prepare($sql_update);
+          if ($this->stmt->execute([$hashed_pass, $cid, $email])) {
+            $this->dbh->commit();
+            $this->response = $this->Alert->alertMessage("SUCCESS:", "Account Password updated successfully, Pls wait...", "success") . "<script>
+    setTimeout(() => {
+      window.location.href = './logout?action=destroy_admin_session';
+    }, 3500);
+    </script>";
+          }
+        } catch (PDOException $e) {
+          $this->dbh->rollBack();
+          $this->response =
+            $this->response = $this->Alert->alertMessage("SERVER ERROR", "Internal Server Error: " . $e->getMessage(), "danger");
+        }
+      }
+    }
+    return $this->response;
+    $this->dbh = null;
+  }
 }

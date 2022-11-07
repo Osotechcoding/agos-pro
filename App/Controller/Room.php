@@ -107,7 +107,7 @@ class Room
 
   public function getAwaitingApprovalBookings()
   {
-    $sql = "SELECT * FROM `booking_tbl` WHERE `status`=1 AND `is_approved`='1' ORDER BY created_at DESC LIMIT 200";
+    $sql = "SELECT * FROM `booking_tbl` WHERE `status`=1 OR `status`=2 AND `is_approved`='1' ORDER BY created_at DESC LIMIT 200";
     $this->stmt = $this->dbh->prepare($sql);
     $this->stmt->execute();
     if ($this->stmt->rowCount() > 0) {
@@ -419,6 +419,30 @@ class Room
       }
     }
 
+    return $this->response;
+    $this->dbh = null;
+  }
+
+  public function delete($data)
+  {
+    try {
+      $roomId = $this->Core->sanitise_string($data['roomId']);
+      $room_data = self::getRoomById($roomId);
+      $roomImage = $room_data->firstImage;
+      $imagePath = "../../image/" . $roomImage;
+      $this->dbh->beginTransaction();
+      $this->stmt = $this->dbh->prepare("DELETE FROM `{$this->table}` WHERE id=? LIMIT 1");
+      if ($this->stmt->execute([$roomId])) {
+        if (file_exists($imagePath)) {
+          unlink($imagePath);
+        }
+        $this->dbh->commit();
+        $this->response = $this->Alert->flashMessage("SUCCESS", "Room Deleted Successfully!", "success", "top-right") . $this->Core->pageReload();
+      }
+    } catch (PDOException $e) {
+      $this->dbh->rollback();
+      $this->response = $this->Alert->flashMessage("ERROR", "Something went wrong!: " . $e->getMessage(), "error", "top-right");
+    }
     return $this->response;
     $this->dbh = null;
   }

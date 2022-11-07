@@ -35,7 +35,8 @@ require_once "Helper/customerHelper.php";
           <div class="page-bar">
             <div class="page-title-breadcrumb">
               <div class=" pull-left">
-                <div class="page-title">All Available Rooms</div>
+                <div class="page-title">All Available Rooms <a href="javascript:void(0);" class="text-danger"
+                    onclick="window.history.back()">Go Back</a></div>
               </div>
               <ol class="breadcrumb page-breadcrumb pull-right">
                 <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="./user-dashboard">Home</a>&nbsp;<i
@@ -90,6 +91,8 @@ require_once "Helper/customerHelper.php";
             </div>
             <?php
               }
+            } else {
+              echo '<div class="col-md-4 text-center">' . $Alert->alertMessage("NOTICE:", "No available rooms at the moment, check back later!", "danger") . '</div>';
             }
             ?>
           </div>

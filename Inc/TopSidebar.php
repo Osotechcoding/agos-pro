@@ -17,7 +17,7 @@
 	            </div>
 	            <div class="profile-usertitle">
 	              <div class="sidebar-userpic-name"> <?php echo ucfirst($admin_data->fullname); ?> </div>
-	              <div class="profile-usertitle-job"> <?php echo ucfirst($admin_data->role_type); ?> </div>
+	              <div class="profile-usertitle-job"> <?php echo strtoupper($admin_data->role_type); ?> </div>
 	            </div>
 	            <div class="sidebar-userpic-btn">
 
@@ -40,7 +40,7 @@
 	          </a>
 	        </li>
 	        <li class="nav-item">
-	          <a href="view-booking-list" class="nav-link ">
+	          <a href="view-booking" class="nav-link ">
 	            <i class="fa fa-bed"></i>
 	            <span class="title">View Booking</span>
 	          </a>
@@ -70,7 +70,12 @@
 	            <span class="title">Generate Token</span>
 	          </a>
 	        </li>
-
+	        <li class="nav-item">
+	          <a href="profile" class="nav-link ">
+	            <i class="fa fa-cogs" aria-hidden="true"></i>
+	            <span class="title">Settings</span>
+	          </a>
+	        </li>
 	      </ul>
 	    </div>
 	  </div>

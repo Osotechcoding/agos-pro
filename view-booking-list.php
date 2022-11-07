@@ -376,7 +376,6 @@ require_once "Helper/helper.php";
   <script>
   $(document).ready(function() {
     $(".osotech_datatable").dataTable();
-
     let rejectBtn = $(".reject_btn");
     approveCustomerBooking(rejectBtn);
 

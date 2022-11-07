@@ -1,15 +1,18 @@
 <?php
 
 // use App\Model\Database;
+// require_once "Core.php";
+// require_once "Alert.php";
+// require_once "Admin.php";
+// require_once "Manager.php";
+// require_once "Customer.php";
+// require_once "Room.php";
+// require_once "Admin.php";
+// require_once "Pin.php";
 require_once "../Model/Database.php";
-require_once "Core.php";
-require_once "Alert.php";
-require_once "Admin.php";
-require_once "Manager.php";
-require_once "Customer.php";
-require_once "Room.php";
-require_once "Admin.php";
-require_once "Pin.php";
+spl_autoload_register(function ($class_def) {
+  require "./" . $class_def . ".php";
+});
 
 $Database = new Database();
 $dbh = $Database->osotech_connect();
@@ -39,30 +42,41 @@ if ($request_method === "POST") {
           echo $result;
         }
         break;
+
       case 'Unsuspend':
         $result = $Manager->suspendStaff($_POST);
         if ($result) {
           echo $result;
         }
         break;
+
       case 'Suspend':
         $result = $Manager->suspendStaff($_POST);
         if ($result) {
           echo $result;
         }
         break;
+
       case 'customer_login_form_submit__':
         $result = $Customer->login($_POST);
         if ($result) {
           echo $result;
         }
         break;
+
       case 'delete_cust':
         $result = $Customer->delete($_POST);
         if ($result) {
           echo $result;
         }
         break;
+      case 'delete_room':
+        $result = $Room->delete($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
+
       case 'submit_new_customer_reg_':
         $result = $Customer->customerOnlineRegistration($_POST);
         if ($result) {
@@ -82,30 +96,35 @@ if ($request_method === "POST") {
           echo $result;
         }
         break;
+
       case '_topUpstomerWallet_submit_':
         $result = $Pin->topUpCustomerWallet($_POST);
         if ($result) {
           echo $result;
         }
         break;
+
       case 'top_up_my_wallet_now':
         $result = $Pin->topUpMyWalletByTokenCard($_POST);
         if ($result) {
           echo $result;
         }
         break;
+
       case 'remove_token_from_table':
         $result = $Pin->removeUsedWalletTokenPin($_POST);
         if ($result) {
           echo $result;
         }
         break;
+
       case '_remove_recharge_history_':
         $result = $Pin->deleteMyWalletRechargeHistory($_POST);
         if ($result) {
           echo $result;
         }
         break;
+
       case 'register_new_staff_btn':
         $result = $Manager->register($_POST);
         if ($result) {
@@ -119,18 +138,35 @@ if ($request_method === "POST") {
           echo $result;
         }
         break;
+
       case 'update_my_acct_pass_':
         $result = $Customer->updateMyPassword($_POST);
         if ($result) {
           echo $result;
         }
         break;
+
+      case 'update_admin_acct_pass_':
+        $result = $Admin->updateMyPassword($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
+
+      case 'update_staff_acct_pass_':
+        $result = $Manager->updateMyPassword($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
+
       case 'send_forgot_pwd_link':
         $result = $Customer->sendCustomerPasswordResetLink($_POST);
         if ($result) {
           echo $result;
         }
         break;
+
       case 'update_forgot_pwd_now':
         $result = $Customer->resetCustomerPassword($_POST);
         if ($result) {
