@@ -1,10 +1,12 @@
 <?php
-require_once "Helper/customerHelper.php";
+require_once "Helper/helper.php";
 
 if (isset($_GET['bookingId']) && $_GET['bookingId'] != "" && isset($_GET['cid']) && $_GET['cid'] != "" && isset($_GET['action']) && $_GET['action'] == "print-invoice") {
   $bid = $Core->sanitise_string($_GET['bookingId']);
+  $cid = $Core->sanitise_string($_GET['cid']);
   $booking_details = $Room->getBookingById($bid);
   $room_details = $Room->getRoomById($booking_details->room_id);
+  $customer_data = $Customer->getCustomerById($cid);
 } else {
   echo "<script>window.history.back()</script>";
 }
@@ -25,10 +27,10 @@ if (isset($_GET['bookingId']) && $_GET['bookingId'] != "" && isset($_GET['cid'])
   class="page-header-fixed sidemenu-closed-hidelogo page-content-white page-md header-white dark-sidebar-color logo-dark">
   <div class="page-wrapper">
     <!-- start header -->
-    <?php include_once "Inc/customerHeader.php" ?>
+    <?php include_once "Inc/Header.php" ?>
     <div class="page-container">
       <!-- start sidebar menu -->
-      <?php include_once "Inc/customerSidebar.php"; ?>
+      <?php include_once "Inc/TopSidebar.php"; ?>
       <div class="page-content-wrapper">
         <div class="page-content">
           <div class="page-bar">
@@ -37,7 +39,7 @@ if (isset($_GET['bookingId']) && $_GET['bookingId'] != "" && isset($_GET['cid'])
                 <div class="page-title">Invoice</div>
               </div>
               <ol class="breadcrumb page-breadcrumb pull-right">
-                <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="./user-dashboard">Home</a>&nbsp;<i
+                <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="./">Home</a>&nbsp;<i
                     class="fa fa-angle-right"></i>
                 <li><a class="parent-item" href="#">Booking</a>&nbsp;<i class="fa fa-angle-right"></i>
                 </li>

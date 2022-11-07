@@ -19,6 +19,7 @@
   <div class="limiter">
     <div class="container-login100 page-background">
       <div class="wrap-login100">
+        <h3 class="text-center text-warning mb-2">AGOS Executive Business Lounge</h3>
         <form class="login100-form validate-form" id="adminAuthLoginForm">
 
           <span class="login100-form-title p-b-34 p-t-27">
@@ -45,7 +46,11 @@
               Sign In
             </button>
           </div>
-
+          <div class="text-center p-t-40 mt-3 text-warning">
+            Powered by: <a class="txt1 ml-1" href="signup">
+              AGOS
+            </a>
+          </div>
         </form>
       </div>
     </div>

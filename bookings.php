@@ -117,7 +117,22 @@ require_once "Helper/staffHelper.php";
 
                               </td>
                               <td class="center">
-                                <span class="label label-sm label-warning">Pending </span>
+                                <?php switch ($item->status) {
+                                      case 1:
+                                        echo ' <span class="label label-sm label-warning">Pending </span>';
+                                        break;
+                                      case 2:
+                                        echo ' <span class="label label-sm label-success">CheckedIn </span>';
+                                        break;
+                                      case 3:
+                                        echo ' <span class="label label-sm label-danger">CheckedOut </span>';
+                                        break;
+
+                                      default:
+                                        echo ' <span class="label label-sm label-warning">Pending </span>';
+                                        break;
+                                    } ?>
+
                               </td>
 
                               <td class="center">
@@ -213,6 +228,7 @@ require_once "Helper/staffHelper.php";
                               </td>
                               <td class="center">
                                 <span class="label label-sm label-warning">Pending </span>
+
                               </td>
                               <td class="center">
                                 <button type="button" data-id="<?php echo $pending->id; ?>"

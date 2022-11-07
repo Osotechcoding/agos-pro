@@ -137,8 +137,22 @@ if ($request_method === "POST") {
           echo $result;
         }
         break;
+
       case 'submit_self_booking_form':
         $result = $Customer->bookWithWalletCredit($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
+
+      case 'confirm_checkIn_':
+        $result = $Customer->checkIn_checkOut_customer($_POST);
+        if ($result) {
+          echo $result;
+        }
+        break;
+      case 'confirm_checkOut_':
+        $result = $Customer->checkIn_checkOut_customer($_POST);
         if ($result) {
           echo $result;
         }

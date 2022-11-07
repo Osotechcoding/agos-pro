@@ -44,15 +44,15 @@ function sendLoginDetailEmailToNewStaff($fullname, $email, $login_password, $rol
   $phpmailer->Password = '5479f82c1922d6';
   $phpmailer->setFrom('admin@agos.com', 'Admin');
   $phpmailer->addAddress($email, $fullname);
-  $phpmailer->addAddress("osoetchcoding@gmail.com", "Osotech");
+  $phpmailer->addAddress("osotechcoding@gmail.com", "Osotech");
   $phpmailer->Subject = 'Your AGOS Hotel Access Details';
   $phpmailer->isHTML(true);   //Set email format to HTML
   $phpmailer->Body    =
-    "Hi, $fullname, \r\n  <b />AGOS Hotel Created an account for you as <b> $role_type </b>\r\n with these Login Details:\r\n \r\n
-     \r\n Username => $email \r\n Password => $login_password \r\n \r\n
-    \r\n Click the Link below to Access your Dashboard. \r\n \r\n <a href='" . $link . "'>" . $link . "</a>  Best Regards <b /> <b>AGOS Hotel</b>.";
+    "Hi, $fullname, \r\n  <br />AGOS Hotel Created an account for you as <b> $role_type </b>\r\n  with these Login Details:\r\n \r\n
+     \r\n Username= $email \r\n\r\n Password = $login_password \r\n \r\n
+    \r\n Click the Link below to Access your Dashboard. \r\n \r\n <a href='" . $link . "'>" . $link . "</a>  \r\n\r\n Best Regards <br /> <b> AGOS Hotel</b>.";
   $phpmailer->AltBody =
-    "Hi, $fullname, \r\n  <b />AGOS Hotel Created an account for you as <b> $role_type </b>\r\n with these Login Details:\r\n \r\n
+    "Hi, $fullname, \r\n  <br />AGOS Hotel Created an account for you as <b> $role_type </b>\r\n with these Login Details:\r\n \r\n
      \r\n Username => $email \r\n Password => $login_password \r\n \r\n
     \r\n Click the Link below to Access your Dashboard. \r\n \r\n <a href='" . $link . "'>" . $link . "</a>  Best Regards <b /> <b>AGOS Hotel</b>.";
   if ($phpmailer->send()) {
@@ -79,7 +79,7 @@ Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGOS Hotel
   $phpmailer->Password = '5479f82c1922d6';
   $phpmailer->setFrom('admin@agos.com', 'Admin');
   $phpmailer->addAddress($email, $name);
-  $phpmailer->addAddress("osoetchcoding@gmail.com", "Osotech");
+  $phpmailer->addAddress("osotechcoding@gmail.com", "Osotech");
   $phpmailer->Subject = 'Room Reservation at AGOS Hotel on ' . date("Y-m-d", strtotime($checkIn));
   $phpmailer->isHTML(true);   //Set email format to HTML
   $phpmailer->Body    = $message_body;
@@ -94,9 +94,9 @@ Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGOS Hotel
 function sendTopUpWalletNotificationToCustomer($name, $email, $amount, $date)
 {
   $message_body = "<b>Dear " . $name . "</b>,\r\n\r\n 
-This is to notify you that  your wallet at AGOS Hotel was Top-Up with &#8358; " . number_format($amount, 2) . " \r\n\r\n on $date
-Recharge Amount: <b>" . number_format($amount, 2) . "</b>\r\n\r\n
-Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGOS Hotel</b>.";
+This is to notify you that  your wallet account at AGOS Hotel was Credited with <b> &#8358; " . number_format($amount, 2) . "</b> \r\n\r\n on $date
+by the Admin:\r\n\r\n
+Contact 08131374443 for any questions.\r\n \r\n Best Regards <br /> <b>AGOS Hotel</b>.";
   $phpmailer = new PHPMailer(true);
   $phpmailer->SMTPDebug = 0;
   $phpmailer->isSMTP();
@@ -107,8 +107,8 @@ Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGOS Hotel
   $phpmailer->Password = '5479f82c1922d6';
   $phpmailer->setFrom('admin@agos.com', 'Admin');
   $phpmailer->addAddress($email, $name);
-  $phpmailer->addAddress("osoetchcoding@gmail.com", "Osotech");
-  $phpmailer->Subject = 'Wallet Top-Up Notification';
+  $phpmailer->addAddress("osotechcoding@gmail.com", "Osotech");
+  $phpmailer->Subject = 'Wallet Credit Alert @ AGOS Hotel';
   $phpmailer->isHTML(true);   //Set email format to HTML
   $phpmailer->Body    = $message_body;
   $phpmailer->AltBody = $message_body;
@@ -122,7 +122,7 @@ Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGOS Hotel
 function
 sendCustomerPasswordResetLinkViaEmail($fullname, $email, $link)
 {
-  $message_body = "Hello <b>$fullname</b>,\r\n \r\nSomebody requested a new password for the AGOS Hotel portal account associated with <b>$email</b>.\r\n \r\n
+  $message_body = "Hello <b>$fullname</b>,\r\n \r\n Somebody requested a new password for the AGOS Hotel portal account associated with <b>$email</b>.\r\n \r\n
 No changes have been made to your account yet.\r\n \r\n
 You can reset your password by clicking the link below:\r\n \r\n
 <a href='" . $link . "'>" . $link . "</a>\r\n \r\n
@@ -140,16 +140,15 @@ The AGOS team";
   $phpmailer->Password = '5479f82c1922d6';
   $phpmailer->setFrom('admin@agos.com', 'Admin');
   $phpmailer->addAddress($email, $fullname);
-  $phpmailer->addAddress("osoetchcoding@gmail.com", "Osotech");
-  $phpmailer->Subject = 'Password Rest Notification';
+  $phpmailer->addReplyTo("osotechcoding@gmail.com", "Osotech");
+  $phpmailer->Subject = 'Password Reset Notification';
   $phpmailer->isHTML(true);   //Set email format to HTML
   $phpmailer->Body    = $message_body;
   $phpmailer->AltBody = $message_body;
   if ($phpmailer->send()) {
     return true;
   } else {
-    $msg = "Sorry, Message could not be sent. Mailer Error: {$phpmailer->ErrorInfo}";
-    $msg = 'Message sent! Thanks for contacting us.';
+    return false;
   }
 }
 
@@ -160,15 +159,13 @@ function sendBookingApproveNotificationToCustomer($status, $email, $name)
     case 'Approved':
       $message_body = "Hello <b>$name</b>,\r\n \r\n Your Booking with AGOS Hotel was  <b>$status</b>.\r\n \r\n
 Thanks for patronizing Us.\r\n \r\n
-We are ready to serve you better 24/7
-If you did not make a booking, please let us know immediately by replying to this email.\r\n \r\n \r\n \r\n
-Yours,\r\n \r\n
+We are ready to serve you better.\r\n\r\n
+If you did not make a booking, please let us know immediately by replying to this email.\r\n \r\n 
 The AGOS Team";
       break;
     case 'Rejected':
       $message_body = "Hello <b>$name</b>,\r\n \r\n Your Booking with AGOS Hotel was  <b>$status</b> due to some reasons that are known to the Management.\r\n \r\n
 We are so sorry for any inconvenience.\r\n \r\n
-Yours,\r\n \r\n
 The AGOS Team";
       break;
 
@@ -186,7 +183,7 @@ The AGOS Team";
   $phpmailer->Password = '5479f82c1922d6';
   $phpmailer->setFrom('admin@agos.com', 'Admin');
   $phpmailer->addAddress($email, $name);
-  $phpmailer->addReplyTo("osoetchcoding@gmail.com", "Osotech");
+  $phpmailer->addReplyTo("osotechcoding@gmail.com", "Osotech");
   $phpmailer->Subject = "Booking $status Notification";
   $phpmailer->isHTML(true);   //Set email format to HTML
   $phpmailer->Body    = $message_body;
@@ -200,7 +197,7 @@ The AGOS Team";
 
 function sendRejectBookingNotificationToCustomer($status, $email, $name, $message)
 {
-  $message_body = "Hello <b>$name</b>,\r\n \r\n Your Booking with AGOS Hotel was  <b>$status</b> due to the following reason.\r\n \r\n
+  $message_body = "Hello <b>$name</b>,\r\n \r\n Your Booking with AGOS Hotel was  <b>$status</b> due to this reason.\r\n \r\n
   \r\n \r\n <i>$message</i>
 We are so sorry for any inconvenience.\r\n \r\n
 \r\n \r\n
@@ -215,7 +212,7 @@ The AGOS Team";
   $phpmailer->Password = '5479f82c1922d6';
   $phpmailer->setFrom('admin@agos.com', 'Admin');
   $phpmailer->addAddress($email, $name);
-  $phpmailer->addReplyTo("osoetchcoding@gmail.com", "Osotech");
+  $phpmailer->addReplyTo("osotechcoding@gmail.com", "Osotech");
   $phpmailer->Subject = "Booking $status Notification";
   $phpmailer->isHTML(true);   //Set email format to HTML
   $phpmailer->Body    = $message_body;

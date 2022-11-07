@@ -43,9 +43,9 @@
                    <td><?php echo date("D jS M, Y", strtotime($recent->checkOut)); ?></td>
                    <td>
                      <?php
-                          if ($recent->is_approved == "1") {
+                          if ($recent->is_approved == "0") {
                             echo '<span class="label label-sm label-warning">Pending</span>';
-                          } elseif ($recent->is_approved == "2") {
+                          } elseif ($recent->is_approved == "1") {
                             echo '<span class="label label-sm label-success">Approved</span>';
                           } else {
                             echo '<span class="label label-sm label-danger">Rejected</span>';

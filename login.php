@@ -24,7 +24,7 @@
   <div class="limiter">
     <div class="container-login100 page-background">
       <div class="wrap-login100">
-        <h3 class="text-center text-warning mb-2">AGOS HOTEL</h3>
+        <h3 class="text-center text-warning mb-2">AGOS Executive Business Lounge</h3>
         <form class="login100-form validate-form" id="customerLoginForm">
           <span class="login100-form-title p-b-34 p-t-27">
             CUSTOMER LOGIN

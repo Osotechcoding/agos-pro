@@ -1,16 +1,12 @@
 <?php
-require_once "Helper/helper.php";
+require_once "Helper/staffHelper.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <!-- BEGIN HEAD -->
 
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta content="width=device-width, initial-scale=1" name="viewport" />
-  <meta name="description" content="Responsive Admin Template" />
-  <meta name="author" content="SmartUniversity" />
+  <?php include_once "Inc/MetaTag.php"; ?>
   <title> Customers</title>
   <!-- icons -->
   <?php include_once("Inc/DatatableHeaderScript.php"); ?>
@@ -22,14 +18,12 @@ require_once "Helper/helper.php";
   <div class="page-wrapper">
     <!-- start header -->
 
-    <?php include_once "Inc/Header.php" ?>
-    <!-- end header -->
-    <!-- start page container -->
+    <?php include_once "Inc/staffHeader.php" ?>
+
     <div class="page-container">
       <!-- start sidebar menu -->
-      <?php include_once "Inc/TopSidebar.php"; ?>
-      <!-- end sidebar menu -->
-      <!-- start page content -->
+      <?php include_once "Inc/staffSidebar.php"; ?>
+
       <div class="page-content-wrapper">
         <div class="page-content">
           <div class="page-bar">
@@ -38,7 +32,7 @@ require_once "Helper/helper.php";
                 <div class="page-title">All Customers</div>
               </div>
               <ol class="breadcrumb page-breadcrumb pull-right">
-                <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="./">Home</a>&nbsp;<i
+                <li><i class="fa fa-home"></i>&nbsp;<a class="parent-item" href="./staff-dashboard">Home</a>&nbsp;<i
                     class="fa fa-angle-right"></i>
                 </li>
                 <li><a class="parent-item" href="#">Customers</a>&nbsp;<i class="fa fa-angle-right"></i>
@@ -62,10 +56,9 @@ require_once "Helper/helper.php";
 
                     <div class="card-body ">
                       <div class="btn-group m-2">
-                        <a href="add-customer" id="addRow" class="btn btn-info">
+                        <a href="create-customer" id="addRow" class="btn btn-info">
                           Add New Customer <i class="fa fa-plus"></i>
                         </a>
-
                       </div>
 
                       <div class="table-scrollable">
@@ -79,8 +72,7 @@ require_once "Helper/helper.php";
                               <th class="center"> Email </th>
                               <th class="center"> Address </th>
                               <th class="center">Joining Date</th>
-                              <th class="center">Booking History</th>
-                              <th class="center"> Action </th>
+
                             </tr>
                           </thead>
                           <tbody>
@@ -98,7 +90,6 @@ require_once "Helper/helper.php";
                                 $cnt++;
                             ?>
                             <tr class="odd gradeX">
-
                               <td class="center"><?php echo $customer->fullname; ?></td>
                               <td class="center">&#8358;<?php echo number_format($bal, 2); ?></td>
                               <td class="center"><a href="tel:<?php echo $customer->phone; ?>">
@@ -107,16 +98,7 @@ require_once "Helper/helper.php";
                                   <?php echo $customer->email; ?> </a></td>
                               <td class="center"><?php echo $customer->address; ?></td>
                               <td class="center"><?php echo $customer->created_at; ?></td>
-                              <td class="center"><a
-                                  href="customer-booking-history?cid=<?php echo $customer->id; ?>&action=view-history"
-                                  class="btn btn-circle btn-warning  btn-sm">View</a></td>
 
-                              <td class="center">
-                                <a href="recharge-wallet?cid=<?php echo $customer->id; ?>&action=recharge"
-                                  class="btn btn-circle btn-info  btn-sm">Credit Wallet</a>
-                                <button type="button" data-id="<?php echo $customer->id; ?>" data-action="delete_cust"
-                                  class="btn btn-circle delete_customer_btn deepPink-bgcolor btn-sm osotech_action_<?php echo $customer->id; ?>">Delete</button>
-                              </td>
                             </tr>
                             <?php
                               }
@@ -164,15 +146,7 @@ require_once "Helper/helper.php";
                             <?php echo date("D M jS, Y", strtotime($customer->created_at)); ?>
                           </p>
                         </div>
-                        <div class="profile-userbuttons">
-                          <a href="customer-booking-history?cid=<?php echo $customer->id; ?>&action=view-history"
-                            class="btn btn-circle btn-warning  btn-sm">View</a>
-                          <a href="recharge-wallet?cid=<?php echo $customer->id; ?>&action=recharge"
-                            class="btn btn-circle btn-info btn-sm">Credit Wallet
-                          </a>
-                          <button type="button" data-id="<?php echo $customer->id; ?>" data-action="delete_cust"
-                            class="btn btn-circle delete_customer_btn deepPink-bgcolor btn-sm osotech_action_<?php echo $customer->id; ?>">Delete</button>
-                        </div>
+
                       </div>
                     </div>
                   </div>
@@ -191,36 +165,7 @@ require_once "Helper/helper.php";
     <?php include_once "Inc/Footer.php"; ?>
   </div>
   <?php include_once "Inc/DatatableFooterScript.php"; ?>
-  <script>
-  $(document).ready(function() {
-    let delete_customer_btn = $(".delete_customer_btn");
-    deleteCustomer(delete_customer_btn);
-  });
 
-  function deleteCustomer(delbtn) {
-    delbtn.on("click", function() {
-      let custId = $(this).data("id");
-      let action = $(this).data("action");
-      if (confirm('Are you sure, You want to delete this Customer?')) {
-        $(".osotech_action_" + custId).html("Loading...").attr("disabled", true);
-        //send request
-        $.post("App/Controller/Actions", {
-          action: action,
-          custId: custId
-        }, (response) => {
-          $(".osotech_action_" + custId).html('Delete').attr("disabled", false);
-          setTimeout(() => {
-            console.log(response);
-            $("#server-response").html(response);
-          }, 1000);
-        });
-      } else {
-        return false;
-      }
-
-    });
-  }
-  </script>
 </body>
 
 </html>

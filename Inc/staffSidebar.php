@@ -28,7 +28,13 @@
 	          </div>
 	        </li>
 	        <li class="menu-heading">
-	          <span class="text-center">DASHBOARD</span>
+	          <a href="./staff-dashboard" class="nav-link"><span class="text-center">DASHBOARD</span></a>
+	        </li>
+	        <li class="nav-item">
+	          <a href="check-out-customer" class="nav-link ">
+	            <i class="fa fa-sign-in"></i>
+	            <span class="title">CheckIn-CheckOut</span>
+	          </a>
 	        </li>
 	        <li class="nav-item">
 	          <a href="make-booking" class="nav-link ">
@@ -41,13 +47,18 @@
 	          </a>
 	        </li>
 	        <li class="nav-item ml-2">
-	          <a href="create-room" class="nav-link ">
-	            <span class="title"><i class="fa fa-credit-card"></i> Add Room</span>
+	          <a href="create-room" class="nav-link">
+	            <span class="title"><i class="fa fa-bed"></i> Create Room</span>
+	          </a>
+	        </li>
+	        <li class="nav-item ml-2">
+	          <a href="customers" class="nav-link">
+	            <span class="title"><i class="fa fa-users"></i> Customers</span>
 	          </a>
 	        </li>
 	        <li class="nav-item ml-2">
 	          <a href="view-token" class="nav-link ">
-	            <span class="title"><i class="fa fa-credit-card"></i> Tokens</span>
+	            <span class="title"><i class="fa fa-credit-card"></i> Tokens Credit</span>
 	          </a>
 	        </li>
 	        <li class="nav-item">
@@ -55,7 +66,6 @@
 	            <span class="title"> <i class="fa fa-cogs"></i> Profile</span>
 	          </a>
 	        </li>
-
 	      </ul>
 	    </div>
 	  </div>

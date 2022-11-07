@@ -28,7 +28,7 @@
 	          </div>
 	        </li>
 	        <li class="menu-heading">
-	          <span class="text-center">DASHBOARD</span>
+	          <a href="./user-dashboard" class="nav-link"><span class="text-center">DASHBOARD</span></a>
 	        </li>
 	        <li class="nav-item">
 	          <a href="booking-arena" class="nav-link ">

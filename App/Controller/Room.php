@@ -105,6 +105,18 @@ class Room
     }
   }
 
+  public function getAwaitingApprovalBookings()
+  {
+    $sql = "SELECT * FROM `booking_tbl` WHERE `status`=1 AND `is_approved`='1' ORDER BY created_at DESC LIMIT 200";
+    $this->stmt = $this->dbh->prepare($sql);
+    $this->stmt->execute();
+    if ($this->stmt->rowCount() > 0) {
+      $this->response = $this->stmt->fetchAll();
+      return $this->response;
+      $this->dbh = null;
+    }
+  }
+
   public function getAllBookings()
   {
     $sql = "SELECT * FROM `booking_tbl` ORDER BY created_at DESC LIMIT 200";
@@ -167,7 +179,7 @@ class Room
 
   public function getAllRecentBooking()
   {
-    $sql = "SELECT * FROM `booking_tbl` WHERE DATE(`created_at`) >= DATE(CURRENT_DATE()- INTERVAL 7 DAY) ORDER BY created_at DESC LIMIT 5";
+    $sql = "SELECT * FROM `booking_tbl` WHERE `status` IN (1,2)  AND DATE(`created_at`) >= DATE(CURRENT_DATE()- INTERVAL 30 DAY) ORDER BY created_at DESC LIMIT 10";
     $this->stmt = $this->dbh->prepare($sql);
     $this->stmt->execute();
     if ($this->stmt->rowCount() > 0) {
@@ -266,7 +278,7 @@ class Room
 
   public function getTodaysRevenue()
   {
-    $sql = "SELECT sum(total_bill) as revenue FROM `booking_tbl` WHERE `status`=2 AND DATE(created_at) = DATE(CURRENT_DATE())";
+    $sql = "SELECT SUM(`total_bill`) as revenue FROM `booking_tbl` WHERE  `status` IN (2,3) AND `is_approved`='1' AND DATE(checkin_time) = DATE(CURRENT_DATE())";
     $this->stmt = $this->dbh->prepare($sql);
     $this->stmt->execute();
     if ($this->stmt->rowCount() > 0) {
@@ -275,10 +287,10 @@ class Room
       $this->dbh = null;
     }
   }
-
+  //AGOS Executive Business Lounge
   public function getCurrentMonthRevenue()
   {
-    $sql = "SELECT sum(total_bill) as revenue FROM `booking_tbl` WHERE `status`=2";
+    $sql = "SELECT sum(total_bill) as revenue FROM `booking_tbl` WHERE `status` IN (2,3) AND `is_approved`='1'";
     $this->stmt = $this->dbh->prepare($sql);
     $this->stmt->execute();
     if ($this->stmt->rowCount() > 0) {

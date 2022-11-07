@@ -55,17 +55,7 @@
                   <header class="text-center m-4">
                     <h2>Create New Room</h2>
                   </header>
-                  <button id="panel-button" class="mdl-button mdl-js-button mdl-button--icon pull-right"
-                    data-upgraded=",MaterialButton">
-                    <i class="material-icons">more_vert</i>
-                  </button>
-                  <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                    data-mdl-for="panel-button">
-                    <li class="mdl-menu__item"><a href="rooms"><i class="fa fa-eye"> </i> View all Rooms</a>
-                    </li>
-                    <li class="mdl-menu__item"><a href=""><i class="fa fa-line-chart"> </i> Room History</a>
-                    </li>
-                  </ul>
+
                 </div>
                 <div class="card-body" id="bar-parent">
                   <form id="newRoomCreationForm" class="form-horizontal" enctype="multipart/form-data">
@@ -107,16 +97,16 @@
                         <div class="col-md-6">
                           <select class="form-select form-control custom-select input-height" name="room_type">
                             <optgroup label="Occupancy">
-                              <option value="Single Room">King Room</option>
-                              <option value="Tripple Room">Twin Room</option>
-                              <option value="Double-double Room">Double-double Room</option>
-                              <option value="Quadruple Room">Double-double Room</option>
+                              <option value="Single Room">Single Room</option>
+                              <option value="Tripple Room">Tripple Room</option>
+                              <option value="Double Double Room">Double Double Room</option>
+                              <option value="Quadruple Room">Quadruple Room</option>
                             </optgroup>
                             <optgroup label="Bed">
                               <option value="King Room">King Room</option>
                               <option value="Queen Room">Queen Room</option>
                               <option value="Twin Room">Twin Room</option>
-                              <option value="Double Double Room">Double Double Room</option>
+
                             </optgroup>
                             <optgroup label="Design & Layout">
                               <option value="Presidential Room">Presidential Room</option>

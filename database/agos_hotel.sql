@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 05, 2022 at 11:10 PM
+-- Generation Time: Nov 06, 2022 at 10:45 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 7.4.23
 
@@ -96,19 +96,14 @@ CREATE TABLE IF NOT EXISTS `booking_tbl` (
   `booking_time` time DEFAULT NULL,
   `comment` text DEFAULT NULL,
   `created_at` date DEFAULT NULL,
-  `is_approved` int(1) NOT NULL DEFAULT 1,
+  `is_approved` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0= pending,1= approved,2=rejected',
   `bookedBy` int(11) DEFAULT NULL,
+  `checkIn_time` datetime DEFAULT NULL COMMENT 'customer checkin datetime',
+  `checkOut_time` datetime DEFAULT NULL COMMENT 'customer checkout datetime',
   PRIMARY KEY (`id`),
   KEY `customer_id` (`customer_id`),
   KEY `room_id` (`room_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `booking_tbl`
---
-
-INSERT INTO `booking_tbl` (`id`, `customer_id`, `room_id`, `no_of_guest`, `no_of_children`, `checkIn`, `checkOut`, `status`, `ref_code`, `total_night`, `total_bill`, `payment_method`, `booking_time`, `comment`, `created_at`, `is_approved`, `bookedBy`) VALUES
-(3, 10, 1, 2, 1, '2022-11-06', '2022-11-10', 1, '20221105054849841', 4, 100000, 'Wallet', '05:48:49', 'I will like to reserve this room 203 for myself for the duration I choose', '2022-11-05', 1, NULL);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -135,15 +130,7 @@ CREATE TABLE IF NOT EXISTS `customers` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   KEY `fullname` (`fullname`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `customers`
---
-
-INSERT INTO `customers` (`id`, `fullname`, `email`, `password`, `username`, `verified`, `is_online`, `address`, `phone`, `gender`, `state_of_origin`, `confirmation_code`, `tokenExp`, `created_at`, `reset_token`) VALUES
-(9, 'Agberayi Samson', 'osotechcoding@gmail.com', '$2y$10$yo5CHG8NaEYmC6mAYWTrzeEWd3kKjKuOdh8DkN8u72guYVXjdeR8i', 'Samson', 1, 0, 'No 10, Isaoye Street, Odo-Oja Ikere', '08131374443', 'Male', 'Ekiti State', '', '2022-11-15 14:39:58', '2022-11-05', NULL),
-(10, 'Yakubu Blessing', 'taiwooiza@gmail.com', '$2y$10$C3hoshbI7hJBUwxqidZArOmDeRmIj/xSUf8jgZIgfH221E3resICe', 'Blessing', 1, 1, 'Sanog Ota Ogun State', '09036583063', 'Female', 'Kogi State', '', '2022-11-15 16:38:34', '2022-11-05', NULL);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -177,14 +164,34 @@ CREATE TABLE IF NOT EXISTS `recharge_history` (
   KEY `customer_id` (`customer_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `recharge_history`
+-- Table structure for table `rejected_booking_tbl`
 --
 
-INSERT INTO `recharge_history` (`id`, `customer_id`, `amount`, `recharge_at`, `created_at`) VALUES
-(1, 9, 100000, '2022-11-05 16:06:18', '2022-11-05'),
-(2, 10, 200000, '2022-11-05 17:43:44', '2022-11-05'),
-(3, 10, 100000, '2022-11-05 17:45:38', '2022-11-05');
+CREATE TABLE IF NOT EXISTS `rejected_booking_tbl` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_id` bigint(20) NOT NULL,
+  `room_id` int(11) NOT NULL,
+  `no_of_guest` int(5) DEFAULT NULL,
+  `no_of_children` int(5) DEFAULT NULL,
+  `checkIn` date DEFAULT NULL,
+  `checkOut` date DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT '1=pending,2 checked In,3 checked Out,4=extend staying',
+  `ref_code` varchar(100) NOT NULL,
+  `total_night` int(5) NOT NULL,
+  `total_bill` float NOT NULL,
+  `payment_method` varchar(100) NOT NULL,
+  `booking_time` time DEFAULT NULL,
+  `comment` text DEFAULT NULL,
+  `created_at` date DEFAULT NULL,
+  `is_approved` int(1) NOT NULL DEFAULT 1,
+  `bookedBy` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `customer_id` (`customer_id`),
+  KEY `room_id` (`room_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -206,16 +213,7 @@ CREATE TABLE IF NOT EXISTS `rooms_tbl` (
   `created_at` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `room_name` (`room_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `rooms_tbl`
---
-
-INSERT INTO `rooms_tbl` (`id`, `room_name`, `room_type`, `price`, `room_desc`, `facilities`, `firstImage`, `acType`, `thirdImage`, `is_booked`, `created_at`) VALUES
-(1, 'Room 101', 'Executive Suite', '30000.00', 'Sample', 'Wifi, TV Set, Pool', '1667424209.jpg', 'AC', '', 1, '2022-11-02'),
-(2, 'Room 130', 'Standard Room', '50000.00', 'Just Another Sample Description', 'Tennis, Basket Ball, Flat Screen TV, Pool, Free Unlimited Wifi', '1667436186.jpg', 'AC', '', 0, '2022-11-03'),
-(3, 'Room 203', 'Single Room', '10000.00', 'You\'re going to create an API for newsletter subscriptions. The user will subscribe to the newsletter by submitting their email address. After doing so, their email address will be stored in the database, and they are sent', 'TV, Bathroom', '1667455794.jpg', 'NON-AC', '', 0, '2022-11-03');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -243,14 +241,7 @@ CREATE TABLE IF NOT EXISTS `staff_tbl` (
   `created_at` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `staff_tbl`
---
-
-INSERT INTO `staff_tbl` (`id`, `username`, `email`, `password`, `fullname`, `role_type`, `status`, `verified`, `is_online`, `address`, `gender`, `state_of_origin`, `phone`, `last_login_date`, `account_token`, `image`, `created_at`) VALUES
-(1, 'Iremide', 'info.ftchelpdesk@gmail.com', '$2y$10$oLz2gaWhXOmDgPL9DxK03uVx6rHqSqdJ9eEJciccYeBP5HkgQtWbC', 'Ayoola Iremide', 'Manager', 1, 1, 0, 'No 45, Aaye Street, Ilawe Ekit.', 'Female', 'Ekiti State', '08140122566', '2022-11-03 14:23:31', 'rF6tovwmnQ11FBKWldTR4bGzkA7BklMbpt', NULL, '2022-11-03');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -344,40 +335,7 @@ CREATE TABLE IF NOT EXISTS `wallet_pins_tbl` (
   `created_at` date NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `wallet_pins_tbl`
---
-
-INSERT INTO `wallet_pins_tbl` (`id`, `token`, `amount`, `status`, `created_at`) VALUES
-(1, '638520179342', 55000, 0, '2022-11-03'),
-(2, '342062551317', 55000, 0, '2022-11-03'),
-(3, '593317604221', 55000, 0, '2022-11-03'),
-(4, '416756251203', 55000, 0, '2022-11-03'),
-(5, '512672341350', 55000, 0, '2022-11-03'),
-(6, '623984712053', 55000, 0, '2022-11-03'),
-(7, '419752320863', 55000, 0, '2022-11-03'),
-(8, '724150365312', 55000, 0, '2022-11-03'),
-(9, '238092146537', 55000, 0, '2022-11-03'),
-(10, '275141366052', 55000, 0, '2022-11-03'),
-(11, '653309812742', 55000, 0, '2022-11-03'),
-(12, '323101425769', 55000, 0, '2022-11-03'),
-(13, '750122531646', 55000, 0, '2022-11-03'),
-(14, '016652423175', 55000, 0, '2022-11-03'),
-(15, '625907132348', 55000, 0, '2022-11-03'),
-(16, '795110243623', 55000, 0, '2022-11-03'),
-(19, '012356261547', 55000, 0, '2022-11-03'),
-(21, '352603275411', 100000, 0, '2022-11-05'),
-(22, '241651367052', 100000, 0, '2022-11-05'),
-(23, '613712409532', 100000, 0, '2022-11-05'),
-(24, '927346032151', 100000, 0, '2022-11-05'),
-(25, '985742061332', 100000, 0, '2022-11-05'),
-(26, '603542312917', 100000, 0, '2022-11-05'),
-(27, '711064253352', 100000, 0, '2022-11-05'),
-(28, '012342561573', 100000, 0, '2022-11-05'),
-(29, '301973461225', 100000, 0, '2022-11-05'),
-(30, '136172545203', 100000, 1, '2022-11-05');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -395,14 +353,6 @@ CREATE TABLE IF NOT EXISTS `wallet_tbl` (
   PRIMARY KEY (`id`),
   KEY `customer_id` (`customer_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `wallet_tbl`
---
-
-INSERT INTO `wallet_tbl` (`id`, `customer_id`, `balance`, `last_recharge_date`, `status`, `created_at`) VALUES
-(9, 9, 130000, '2022-11-05 16:32:18', 1, '2022-11-05'),
-(10, 10, 210000, '2022-11-05 16:48:49', 1, '2022-11-05');
 
 --
 -- Constraints for dumped tables

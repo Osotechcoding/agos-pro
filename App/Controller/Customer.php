@@ -66,7 +66,6 @@ class Customer
     return $this->response;
     $this->dbh = null;
   }
-
   public function walkInClientBooking(array $data)
   {
     $room_id = $this->Core->sanitise_string($data['room_id']);
@@ -134,8 +133,6 @@ class Customer
   }
   public function bookWithWalletCredit(array $data)
   {
-    //!getSingleData();
-
     $price = (float)$this->Core->sanitise_string($data['room_price']);
     $wallet_bal = (float)$this->Core->sanitise_string($data['cus_balance']);
     $room_id = $this->Core->sanitise_string($data['room_id']);
@@ -623,6 +620,55 @@ class Customer
       }
     } else {
       $this->response = false;
+    }
+    return $this->response;
+    $this->dbh = null;
+  }
+
+  public function checkIn_checkOut_customer($data)
+  {
+    try {
+      $checkInId = $this->Core->sanitise_string($data['checkInId']);
+      $action = $this->Core->sanitise_string($data['action']);
+      switch ($action) {
+        case 'confirm_checkIn_':
+          $status = "2";
+          $status_text = "Check In Confirmed";
+          break;
+        case 'confirm_checkOut_':
+          $status = "3";
+          $status_text = "Check Out Confirmed";
+          break;
+
+        default:
+          $status = "3";
+          $status_text = "Check Out Confirmed";
+          break;
+      }
+      $this->dbh->beginTransaction();
+      if ($action === "confirm_checkOut_") {
+        //get room details from booking tbl
+        $booking_data = $this->Core->getSingleData("booking_tbl", "id", $checkInId);
+        $roomId = $booking_data->room_id;
+        $room_status = 0;
+        $this->stmt = $this->dbh->prepare("UPDATE `booking_tbl` SET `status`=?,`checkOut_time`=NOW() WHERE id=? LIMIT 1");
+        if ($this->stmt->execute([$status, $checkInId])) {
+          $this->stmt = $this->dbh->prepare("UPDATE `rooms_tbl` SET `is_booked`=? WHERE id=? LIMIT 1");
+          if ($this->stmt->execute([$room_status, $roomId])) {
+            $this->dbh->commit();
+            $this->response = $this->Alert->flashMessage("SUCCESS", "Customer $status_text!", "success", "top-right") . $this->Core->pageReload();
+          }
+        }
+      } else {
+        $this->stmt = $this->dbh->prepare("UPDATE `booking_tbl` SET `status`=?,`checkIn_time`= NOW() WHERE id=? LIMIT 1");
+        if ($this->stmt->execute([$status, $checkInId])) {
+          $this->dbh->commit();
+          $this->response = $this->Alert->flashMessage("SUCCESS", "Customer $status_text!", "success", "top-right") . $this->Core->pageReload();
+        }
+      }
+    } catch (PDOException $e) {
+      $this->dbh->rollback();
+      $this->response = $this->Alert->flashMessage("ERROR", "Something went wrong!: " . $e->getMessage(), "error", "top-right");
     }
     return $this->response;
     $this->dbh = null;

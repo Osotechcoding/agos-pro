@@ -34,6 +34,12 @@
 	          </a>
 	        </li>
 	        <li class="nav-item">
+	          <a href="checkin" class="nav-link ">
+	            <i class="fa fa-sign-in"></i>
+	            <span class="title">CheckIn-CheckOut</span>
+	          </a>
+	        </li>
+	        <li class="nav-item">
 	          <a href="view-booking-list" class="nav-link ">
 	            <i class="fa fa-bed"></i>
 	            <span class="title">View Booking</span>
