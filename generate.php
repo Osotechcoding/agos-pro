@@ -52,9 +52,11 @@ require_once "Helper/helper.php";
             <div class="col-md-12 col-sm-12">
               <div class="card card-box">
                 <div class="card-head">
-                  <header class="text-center">Generate Customer Wallet Recharge Token</header>
+                 
+                  <h2 class="lead text-center mb-3 text-bold text-info">Generate Customer Wallet Recharge Token</h2>
                 </div>
                 <div class="card-body" id="bar-parent">
+                  <h5 class="text-center mb-1 col-md-6 offset-3" id="response"></h5>
                   <form id="generateWalletTokenForm" class="form-horizontal">
                     <div class="form-body">
                       <div class="form-group row">
@@ -64,7 +66,7 @@ require_once "Helper/helper.php";
                         <div class="col-md-6">
                           <input type="number" name="no_of_token" data-required="1"
                             placeholder="Enter No of token to generate" class="form-control input-height" />
-                          <span class="text-danger">Max: 200 Tokens at Once</span>
+                          <span class="text-danger"><i>Max: 200 Tokens to generate at Once</i></span>
                         </div>
                       </div>
                       <div class="form-group row">
@@ -73,7 +75,7 @@ require_once "Helper/helper.php";
                         </label>
                         <div class="col-md-6">
                           <input type="number" autocomplete="off" name="price" data-required="1"
-                            placeholder="Enter amount" class="form-control input-height" />
+                            placeholder="Enter Token Price" class="form-control input-height" />
                         </div>
                       </div>
 
@@ -189,7 +191,7 @@ require_once "Helper/helper.php";
         setTimeout(() => {
           $("._loadingBtn__").html("Generate Now").attr("disabled", false);
           // console.log(res);
-          $("#server-response").html(res);
+          $("#response").html(res);
         }, 1000);
       })
     });

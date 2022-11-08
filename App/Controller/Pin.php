@@ -23,9 +23,9 @@ class Pin
     //check for empty form values 
     if ($this->Core->isEmptyStr($q) || $this->Core->isEmptyStr($p)) {
       // show error
-      $this->response = $this->Alert->flashMessage("AGOS Says", "Invalid Submission, Pls try again!", "error", "top-right");
+      $this->response = $this->Alert->alertMessage("WARNING:", "Invalid Submission, Pls try again!", "danger");
     } elseif ($q > 200) {
-      $this->response = $this->Alert->flashMessage("AGOS Says", "You Cannot generate more than 200 Wallet Token at once!", "error", "top-right");
+      $this->response = $this->Alert->alertMessage("WARNING:", "You Cannot generate more than 200 Wallet Token at once!", "danger");
     } else {
       $this->_Pins_code = 12;
       //set pin codes 
@@ -90,9 +90,9 @@ class Pin
         $countInserted = $countInserted + $rowCount;
       }
       if ($this->stmt != NULL) {
-        $this->response = $this->Alert->flashMessage("AGOS Says", "You have Successfully Generated <b>" . $countInserted . " Wallet Top Up Tokens", "success", "top-right") . $this->Core->pageReload();
+        $this->response = $this->Alert->alertMessage("SUCCESS:", "You have Successfully Generated <b>" . $countInserted . " Wallet Top Up Tokens", "success") . $this->Core->pageReload();
       } else {
-        $this->response = $this->Alert->flashMessage("AGOS Says", "Fatal Error Occured! ", "error", "top-right");
+        $this->response = $this->Alert->alertMessage("ERROR", "Fatal Error Occured! ", "danger");
       }
     }
     return $this->response;
