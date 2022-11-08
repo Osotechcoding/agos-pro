@@ -1,18 +1,12 @@
+<?php require_once "Helper/loginHelper.php"; ?>
 <!DOCTYPE html>
 <html>
 
 <head>
   <?php include_once "Inc/MetaTag.php"; ?>
-  <title>Sign up form</title>
+  <title><?php echo ucwords($app_data->company_name); ?> || Customer Signup</title>
+  <?php include_once "Inc/LoginHeaderScript.php"; ?>
   <!-- icons -->
-  <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" href="assets/plugins/iconic/css/material-design-iconic-font.min.css">
-  <!-- bootstrap -->
-  <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-  <!-- style -->
-  <link rel="stylesheet" href="assets/css/pages/extra_pages.css">
-  <!-- favicon -->
-  <link rel="shortcut icon" href="assets/img/favicon.ico" />
   <style>
   label {
     color: #fff;
@@ -154,9 +148,7 @@
       </div>
     </div>
   </div>
-  <script src="assets/plugins/jquery/jquery.min.js"></script>
-  <!-- bootstrap -->
-  <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+  <?php include_once "Inc/LoginFooterScript.php"; ?>
   <script>
   $(document).ready(function() {
     const fd = $("#customerSignUpForm");

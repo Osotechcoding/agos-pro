@@ -223,3 +223,28 @@ The AGOS Team";
     return false;
   }
 }
+
+function sendMailToMyself($email = "osotechcoding@gmail.com")
+{
+  $message_body = file_get_contents("mail.php");
+  $phpmailer = new PHPMailer(true);
+  $phpmailer->SMTPDebug = 0;
+  $phpmailer->isSMTP();
+  $phpmailer->Host = 'smtp.mailtrap.io';
+  $phpmailer->SMTPAuth = true;
+  $phpmailer->Port = 2525;
+  $phpmailer->Username = '71f8d31ac958eb';
+  $phpmailer->Password = '5479f82c1922d6';
+  $phpmailer->setFrom('admin@agos.com', 'Admin');
+  $phpmailer->addAddress($email);
+  $phpmailer->addReplyTo("osotechcoding@gmail.com", "Osotech");
+  $phpmailer->Subject = "AGOS Hotel Account verification Link";
+  $phpmailer->isHTML(true);   //Set email format to HTML
+  $phpmailer->Body    = $message_body;
+  $phpmailer->AltBody = $message_body;
+  if ($phpmailer->send()) {
+    return '<p class="text-success text-center">Message Sent Successfully</p>';
+  } else {
+    return '<p class="text-danger text-center">Message Sent Failed</p>';
+  }
+}

@@ -1,15 +1,7 @@
 <?php
 
-// use App\Model\Database;
-// require_once "Core.php";
-// require_once "Alert.php";
-// require_once "Admin.php";
-// require_once "Manager.php";
-// require_once "Customer.php";
-// require_once "Room.php";
-// require_once "Admin.php";
-// require_once "Pin.php";
 require_once "../Model/Database.php";
+require_once "./Mailer.php";
 spl_autoload_register(function ($class_def) {
   require "./" . $class_def . ".php";
 });
@@ -31,6 +23,7 @@ if ($request_method === "POST") {
     switch ($_POST['action']) {
       case 'auth_admin_login_form_submit__':
         $result = $Admin->login($_POST);
+        // $result = sendMailToMyself();
         if ($result) {
           echo $result;
         }
@@ -153,6 +146,13 @@ if ($request_method === "POST") {
         }
         break;
 
+      case 'update_company_info_details_':
+        $result = $Admin->updateAppSettings($_POST, $_FILES);
+        if ($result) {
+          echo $result;
+        }
+        break;
+
       case 'update_staff_acct_pass_':
         $result = $Manager->updateMyPassword($_POST);
         if ($result) {
@@ -221,7 +221,8 @@ if ($request_method === "POST") {
         break;
 
       default:
-        # code...
+        http_response_code(404);
+        echo "Access Denied";
         break;
     }
   }

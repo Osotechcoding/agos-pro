@@ -20,10 +20,13 @@ class Pin
   {
     $q = $this->Core->sanitise_string($data['no_of_token']);
     $p = $this->Core->sanitise_string($data['price']);
+    $ak = $this->Core->sanitise_string($data['access']);
     //check for empty form values 
-    if ($this->Core->isEmptyStr($q) || $this->Core->isEmptyStr($p)) {
+    if ($this->Core->isEmptyStr($q) || $this->Core->isEmptyStr($p) || $this->Core->isEmptyStr($ak)) {
       // show error
       $this->response = $this->Alert->alertMessage("WARNING:", "Invalid Submission, Pls try again!", "danger");
+    } elseif ($ak <> 'msbm2020') {
+      $this->response = $this->Alert->alertMessage("WARNING:", "Invalid Access Key, Pls try again!", "danger");
     } elseif ($q > 200) {
       $this->response = $this->Alert->alertMessage("WARNING:", "You Cannot generate more than 200 Wallet Token at once!", "danger");
     } else {

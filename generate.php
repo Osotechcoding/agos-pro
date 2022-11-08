@@ -52,7 +52,7 @@ require_once "Helper/helper.php";
             <div class="col-md-12 col-sm-12">
               <div class="card card-box">
                 <div class="card-head">
-                 
+
                   <h2 class="lead text-center mb-3 text-bold text-info">Generate Customer Wallet Recharge Token</h2>
                 </div>
                 <div class="card-body" id="bar-parent">
@@ -76,6 +76,16 @@ require_once "Helper/helper.php";
                         <div class="col-md-6">
                           <input type="number" autocomplete="off" name="price" data-required="1"
                             placeholder="Enter Token Price" class="form-control input-height" />
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label class="control-label col-md-3">Access Key:
+                          <span class="required"> * </span>
+                        </label>
+                        <div class="col-md-6">
+                          <input type="password" autocomplete="off" name="access" data-required="1"
+                            placeholder="Enter Access Key" class="form-control input-height" />
                         </div>
                       </div>
 

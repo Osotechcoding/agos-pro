@@ -18,3 +18,4 @@ $Core->osotech_session();
 $Admin->isAdminLoggedIn();
 
 $admin_data = $Admin->getAdminById($_SESSION['AGOS_ADMIN_UNIQUE_ID']);
+$app_data = $Admin->getAppInfo();

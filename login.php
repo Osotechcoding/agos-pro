@@ -1,30 +1,20 @@
+<?php require_once "Helper/loginHelper.php"; ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta content="width=device-width, initial-scale=1" name="viewport" />
-  <meta name="description" content="Agos Hotel Management System" />
-  <meta name="author" content="Agos Place" />
-  <title>AGO's Hotel</title>
+  <?php include_once "Inc/MetaTag.php"; ?>
+  <title><?php echo ucwords($app_data->company_name); ?> || Customer Login</title>
+  <?php include_once "Inc/LoginHeaderScript.php"; ?>
   <!-- icons -->
-  <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" href="assets/plugins/iconic/css/material-design-iconic-font.min.css">
-  <!-- bootstrap -->
-  <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 
-  <!-- style -->
-  <link rel="stylesheet" href="assets/css/pages/extra_pages.css">
-  <!-- favicon -->
-  <link rel="shortcut icon" href="assets/img/favicon.png" />
 </head>
 
 <body>
   <div class="limiter">
     <div class="container-login100 page-background">
       <div class="wrap-login100">
-        <h3 class="text-center text-warning mb-2">AGOS Executive Business Lounge</h3>
+        <h3 class="text-center text-warning mb-2"><?php echo ucwords($app_data->company_name); ?></h3>
         <form class="login100-form validate-form" id="customerLoginForm">
           <span class="login100-form-title p-b-34 p-t-27">
             CUSTOMER LOGIN
@@ -65,9 +55,7 @@
     </div>
   </div>
   <!-- start js include path -->
-  <script src="assets/plugins/jquery/jquery.min.js"></script>
-  <!-- bootstrap -->
-  <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+  <?php include_once "Inc/LoginFooterScript.php"; ?>
   <script>
   $(document).ready(function() {
     const formData = $("#customerLoginForm");

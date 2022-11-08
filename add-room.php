@@ -195,7 +195,7 @@
     $("#newRoomCreationForm").on("submit", function(event) {
       event.preventDefault();
       $.ajax({
-        url: "App/Controller//Actions",
+        url: "App/Controller/Actions",
         type: "POST",
         data: new FormData(this),
         contentType: false,

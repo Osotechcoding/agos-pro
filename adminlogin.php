@@ -1,25 +1,18 @@
+<?php require_once "Helper/loginHelper.php"; ?>
 <!DOCTYPE html>
 <html>
 
 <head>
   <?php include_once "Inc/MetaTag.php"; ?>
-  <title>Admin Login</title>
-  <!-- icons -->
-  <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" href="assets/plugins/iconic/css/material-design-iconic-font.min.css">
-  <!-- bootstrap -->
-  <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-  <!-- style -->
-  <link rel="stylesheet" href="assets/css/pages/extra_pages.css">
-  <!-- favicon -->
-  <link rel="shortcut icon" href="assets/img/favicon.png" />
+  <title><?php echo ucwords($app_data->company_name); ?> || Admin Login</title>
+  <?php include_once "Inc/LoginHeaderScript.php"; ?>
 </head>
 
 <body>
   <div class="limiter">
     <div class="container-login100 page-background">
       <div class="wrap-login100">
-        <h3 class="text-center text-warning mb-2">AGOS Executive Business Lounge</h3>
+        <h3 class="text-center text-warning mb-2"><?php echo ucwords($app_data->company_name); ?></h3>
         <form class="login100-form validate-form" id="adminAuthLoginForm">
 
           <span class="login100-form-title p-b-34 p-t-27">
@@ -47,8 +40,8 @@
             </button>
           </div>
           <div class="text-center p-t-40 mt-3 text-warning">
-            Powered by: <a class="txt1 ml-1" href="signup">
-              AGOS
+            Powered by: <a class="txt1 ml-1" href="<?php echo ($app_data->url); ?>">
+              <?php echo ($app_data->short_name); ?>
             </a>
           </div>
         </form>
@@ -56,10 +49,7 @@
     </div>
   </div>
   <!-- start js include path -->
-  <script src="assets/plugins/jquery/jquery.min.js"></script>
-  <!-- bootstrap -->
-  <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-
+  <?php include_once "Inc/LoginFooterScript.php"; ?>
   <script>
   $(document).ready(function() {
     const formData = $("#adminAuthLoginForm");
@@ -72,10 +62,7 @@
           $("#response").html(res);
         }, 1000);
       })
-
-    })
-
-
+    });
   })
   </script>
 </body>

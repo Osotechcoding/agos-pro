@@ -90,6 +90,18 @@ class Admin
     }
   }
 
+  public function getAppInfo()
+  {
+    $sql = "SELECT * FROM `tbl_settings` WHERE id=1 LIMIT 1";
+    $this->stmt = $this->dbh->prepare($sql);
+    $this->response = $this->stmt->execute();
+    if ($this->stmt->rowCount() > 0) {
+      $this->response = $this->stmt->fetch();
+      return $this->response;
+      $this->dbh = null;
+    }
+  }
+
   public function updateMyPassword($data)
   {
     $cid = $this->Core->sanitise_string($data['uid']);
@@ -128,6 +140,59 @@ class Admin
           $this->dbh->rollBack();
           $this->response =
             $this->response = $this->Alert->alertMessage("SERVER ERROR", "Internal Server Error: " . $e->getMessage(), "danger");
+        }
+      }
+    }
+    return $this->response;
+    $this->dbh = null;
+  }
+
+  public function updateAppSettings($data, $file)
+  {
+    $company = $this->Core->sanitise_string($data['company']);
+    $phone = $this->Core->sanitise_string($data['phone']);
+    $email = $this->Core->sanitise_string($data['email']);
+    $address = $this->Core->sanitise_string($data['address']);
+    $state = $this->Core->sanitise_string($data['state']);
+    $website = $this->Core->sanitise_string($data['website']);
+    $owner = $this->Core->sanitise_string($data['founder_name']);
+    $founde_year = $this->Core->sanitise_string($data['established_at']);
+
+    $logo_name = $file['logo']['name'];
+
+    //check for empty values
+    if ($this->Core->isEmptyStr($company) || $this->Core->isEmptyStr($phone) || $this->Core->isEmptyStr($email) || $this->Core->isEmptyStr($address) || $this->Core->isEmptyStr($state) || $this->Core->isEmptyStr($logo_name) || $this->Core->isEmptyStr($owner) || $this->Core->isEmptyStr($founde_year) || $this->Core->isEmptyStr($website)) {
+      $this->response = $this->Alert->alertMessage("WARNING:", "Invalid Submission, Pls check your input!", "danger");
+    } else if (!$this->Core->is_valid_email_address($email)) {
+      $this->response = $this->Alert->alertMessage("WARNING:", "Please enter a valid email address!", "danger");
+    } else {
+      $logo_tmp = $file['logo']['tmp_name'];
+      $logo_size = $file['logo']['size'] / 1024;
+
+      $accepted  = ["jpeg", "png", "jpg"];
+      $img_exp = explode(".", $logo_name);
+      $ext = strtolower(end($img_exp));
+      if (!in_array($ext, $accepted)) {
+        $this->response = $this->Alert->alertMessage("WARNING:", "Only JPEG, PNG and  JPG Extension is allowed!", "danger");
+      } else if ($logo_size > 100) {
+        $this->response = $this->Alert->alertMessage("WARNING:", "Max: file size cannot exceed 100KB!", "danger");
+      } else {
+        $image_name = "agos_" . time() . "." . $ext;
+        $destination = "../../image/" . $image_name;
+        try {
+          $this->dbh->beginTransaction();
+          $id = 1;
+          $sql = "UPDATE `tbl_settings` SET company_name=?,phone=?,email=?,`address`=?,`state`=?,logo=?,`url`=?,`owner`=?,founded_year=? WHERE id=? LIMIT 1";
+          $this->stmt = $this->dbh->prepare($sql);
+          if ($this->stmt->execute([$company, $phone, $email, $address, $state, $image_name, $website, $owner, $founde_year, $id])) {
+            if ($this->Core->move_file_to_folder($logo_tmp, $destination)) {
+              $this->dbh->commit();
+              $this->response = $this->Alert->alertMessage("SUCCESS:", "Application Info Updated successfully!", "success") . $this->Core->pageReload();
+            }
+          }
+        } catch (PDOException $e) {
+          $this->dbh->rollBack();
+          $this->response = $this->Alert->alertMessage("SERVER ERROR", "Internal Server Error: " . $e->getMessage(), "danger");
         }
       }
     }

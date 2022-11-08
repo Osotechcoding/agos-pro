@@ -69,7 +69,8 @@
     <li class="dropdown dropdown-user">
       <a href="javascript:;" class="dropdown-toggle" data-bs-toggle="dropdown" data-hover="dropdown"
         data-close-others="true">
-        <img alt="" class="img-circle " src="assets/img/user-image.jpg" />
+        <img alt="" class="img-circle" width="40" height="60"
+          src="image/<?php echo $app_data->logo == NULL || $app_data->logo == "" ? 'agos-logo.jpg' : $app_data->logo; ?>" />
         <span class="username username-hide-on-mobile"> <?php echo ucfirst($admin_data->username); ?> </span>
         <i class="fa fa-angle-down"></i>
       </a>

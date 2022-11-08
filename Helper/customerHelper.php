@@ -21,3 +21,4 @@ $customer_data = $Customer->getCustomerById($loggerId);
 
 $customer_wallet_details = $Customer->getCustomerWalletDetailsById($loggerId);
 $walletHistory = $Customer->getCustomerWalletRechargeHistoryById($loggerId);
+$app_data = $Admin->getAppInfo();

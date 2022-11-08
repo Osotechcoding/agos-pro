@@ -51,17 +51,7 @@
                   <header class="text-center m-4">
                     <h2>Create New Room</h2>
                   </header>
-                  <button id="panel-button" class="mdl-button mdl-js-button mdl-button--icon pull-right"
-                    data-upgraded=",MaterialButton">
-                    <i class="material-icons">more_vert</i>
-                  </button>
-                  <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                    data-mdl-for="panel-button">
-                    <li class="mdl-menu__item"><a href="rooms"><i class="fa fa-eye"> </i> View all Rooms</a>
-                    </li>
-                    <li class="mdl-menu__item"><a href=""><i class="fa fa-line-chart"> </i> Room History</a>
-                    </li>
-                  </ul>
+
                 </div>
                 <div class="card-body" id="bar-parent">
                   <form id="newRoomCreationForm" class="form-horizontal" enctype="multipart/form-data">
@@ -201,7 +191,7 @@
     $("#newRoomCreationForm").on("submit", function(event) {
       event.preventDefault();
       $.ajax({
-        url: "App/Controller//Actions",
+        url: "App/Controller/Actions",
         type: "POST",
         data: new FormData(this),
         contentType: false,

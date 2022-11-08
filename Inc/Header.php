@@ -3,7 +3,8 @@
      <!-- logo start -->
      <div class="page-logo">
        <a href="./">
-         <img alt="" src="assets/img/logo.png">
+         <img alt="" class="logo-default img-fluid" width="100" height="50"
+           src="image/<?php echo $app_data->logo == NULL || $app_data->logo == "" ? 'agos-logo.jpg' : $app_data->logo; ?>">
          <span class="logo-default"></span> </a>
      </div>
      <!-- logo end -->
