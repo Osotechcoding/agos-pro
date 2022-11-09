@@ -334,7 +334,7 @@
                     <h3> Hi, <b><?php echo $fullname ?>,</b><br>
                     </h3>
                     <p>Thank you for your Registration</p>
-                    <p> In order to use the functionality of AGOS Hotel, you need to verifiy your email, bClick the link
+                    <p> In order to use the functionality of AGOS Hotel, you need to verifiy your email, Click the link
                       below to activate your account.</p>
                     <p><a href="<?php echo $link; ?>" class="btn btn-primary">Active Account</a></p>
                     <p>Login with:<?php echo $email; ?> Password: <?php echo $login_password; ?></p>
