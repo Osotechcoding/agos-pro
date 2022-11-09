@@ -6,6 +6,7 @@ class Manager
   private $table = "staff_tbl";
   protected $Core;
   protected $stmt;
+  protected $reponse;
   protected $Alert;
   public function __construct($dbh, $Core, $Alert)
   {
@@ -221,8 +222,14 @@ class Manager
     $cpass = $this->Core->sanitise_string($data['cnewpassword']);
     if ($this->Core->isEmptyStr($email) || $this->Core->isEmptyStr($cid) || $this->Core->isEmptyStr($old_pass) || $this->Core->isEmptyStr($pass) || $this->Core->isEmptyStr($cpass)) {
       $this->response = $this->Alert->alertMessage("WARNING:", "Invalid Submission", "danger");
-    } else if (strlen($pass) <= 6) {
-      $this->response =  $this->Alert->alertMessage("WARNING:", "Password should be atleast seven character long!", "danger");
+    } else if (!$this->Core->checkUserPasswordSecure($pass)) {
+      $error_msg = "<ul class='text-danger' style='list-style: none;'>
+                      <li>minimum of 8 characters in length</li>
+                      <li>at least one Uppercase letter</li>
+                      <li>at least one Lowercase letter</li>
+                      <li>at least one Digit number </li>
+                      <li>at least one special character</li>";
+      $this->response =  $this->Alert->alertMessage("WARNING:", "Password should be <br>" . $error_msg, "danger");
     } else if ($pass !== $cpass) {
       $this->response = $this->Alert->alertMessage("WARNING:", "The two password do not match!", "danger");
     } else {

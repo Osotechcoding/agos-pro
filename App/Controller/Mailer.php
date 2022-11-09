@@ -582,10 +582,9 @@ function messageBody($fullname, $email, $login_password, $tokenExp, $link)
 <p>Thank you for your Registration</p>
 <p> To claim your <b> &#8358;30,000.00</b> bonus wallet credit for your first reservation, you need to verifiy your email, by Clicking  the link
   below.</p>
-<p><a href=' " . $link . "' class='btn btn-primary'>Verify Account</a></p>
-<p> if the above link did not work copy and paste this link to your browser <b> " . $link . "</b></p>
-<p>Login Details: <br> Username=> " . $email . " <br /> Password=> " . $login_password . "</p>
-<p>This link expires at : " . $tokenExp . "</p>
+<p><a href=' " . $link . "' class='btn btn-primary'>Verify My Account</a></p>
+<h4>Login Details: <b> Username => " . $email . "</b></h4><h4> <b>Password => " . $login_password . "</b></h4>
+<p>Link expires at : " . $tokenExp . "</p>
 </div>
 </td>
 </tr>
@@ -638,12 +637,6 @@ function messageBody($fullname, $email, $login_password, $tokenExp, $link)
         </tr>
       </table>
     </td>
-  </tr>
-  <tr>
-    <!-- <td class='bg_light' style='text-align: center;'>
-            <p>No longer want to receive these email? You can <a href='#' style='color: rgba(0,0,0,.8);'>Unsubscribe
-                here</a></p>
-          </td> -->
   </tr>
 </table>
 </div>

@@ -6,6 +6,7 @@ class Admin
   private $table = "admin_tbl";
   protected $Core;
   protected $stmt;
+  protected $reponse;
   protected $Alert;
   public function __construct($dbh, $Core, $Alert)
   {
@@ -104,20 +105,26 @@ class Admin
 
   public function updateMyPassword($data)
   {
-    $cid = $this->Core->sanitise_string($data['uid']);
-    $email = $this->Core->sanitise_string($data['uemail']);
+    $aid = $this->Core->sanitise_string($data['auth_uid']);
+    $email = $this->Core->sanitise_string($data['auth_email']);
     $old_pass = $this->Core->sanitise_string($data['current_pass']);
     $pass = $this->Core->sanitise_string($data['newpassword']);
     $cpass = $this->Core->sanitise_string($data['cnewpassword']);
-    if ($this->Core->isEmptyStr($email) || $this->Core->isEmptyStr($cid) || $this->Core->isEmptyStr($old_pass) || $this->Core->isEmptyStr($pass) || $this->Core->isEmptyStr($cpass)) {
+    if ($this->Core->isEmptyStr($email) || $this->Core->isEmptyStr($aid) || $this->Core->isEmptyStr($old_pass) || $this->Core->isEmptyStr($pass) || $this->Core->isEmptyStr($cpass)) {
       $this->response = $this->Alert->alertMessage("WARNING:", "Invalid Submission", "danger");
-    } else if (strlen($pass) <= 6) {
-      $this->response =  $this->Alert->alertMessage("WARNING:", "Password should be atleast seven character long!", "danger");
+    } else if (!$this->Core->checkUserPasswordSecure($pass)) {
+      $error_msg = "<ul class='text-danger' style='list-style: none;'>
+                      <li>minimum of 8 characters in length</li>
+                      <li>at least one Uppercase letter</li>
+                      <li>at least one Lowercase letter</li>
+                      <li>at least one Digit number </li>
+                      <li>at least one special character</li>";
+      $this->response =  $this->Alert->alertMessage("WARNING:", "Password should be <br>" . $error_msg, "danger");
     } else if ($pass !== $cpass) {
       $this->response = $this->Alert->alertMessage("WARNING:", "The two password do not match!", "danger");
     } else {
-      //get customer data from db via cid
-      $admin_data = $this->getAdminById($cid);
+      //get Admin data from db via cid
+      $admin_data = $this->getAdminById($aid);
       $db_password = $admin_data->password;
       if (!$this->Core->compareTwoHashedPasswords($old_pass, $db_password)) {
         $this->response = $this->Alert->alertMessage("WARNING:", "Your old account password is Incorrect!", "danger");
@@ -128,7 +135,7 @@ class Admin
           $hashed_pass = $this->Core->encryptUserPassword($pass);
           $sql_update = "UPDATE `{$this->table}` SET `password`=? WHERE id=? AND email=? LIMIT 1";
           $this->stmt = $this->dbh->prepare($sql_update);
-          if ($this->stmt->execute([$hashed_pass, $cid, $email])) {
+          if ($this->stmt->execute([$hashed_pass, $aid, $email])) {
             $this->dbh->commit();
             $this->response = $this->Alert->alertMessage("SUCCESS:", "Account Password updated successfully, Pls wait...", "success") . "<script>
     setTimeout(() => {
@@ -138,8 +145,7 @@ class Admin
           }
         } catch (PDOException $e) {
           $this->dbh->rollBack();
-          $this->response =
-            $this->response = $this->Alert->alertMessage("SERVER ERROR", "Internal Server Error: " . $e->getMessage(), "danger");
+          $this->response = $this->Alert->alertMessage("SERVER ERROR", "Internal Server Error: " . $e->getMessage(), "danger");
         }
       }
     }

@@ -190,25 +190,44 @@ require_once "Helper/helper.php";
                         <div class="card-body" id="bar-parent1">
                           <form id="adminChangePasswordForm">
                             <div id="response" class="text-center mb-3"></div>
-                            <div class="form-group">
-                              <label for="current_pass">Current
-                                Password</label>
-                              <input type="password" autocomplete="off" name="current_pass"
-                                class="form-control form-control-lg" id="current_pass" placeholder="Current Password">
-                            </div>
-                            <div class="form-group">
-                              <label for="newpassword">New Password</label>
-                              <input type="password" autocomplete="off" class="form-control form-control-lg"
-                                name="newpassword" id="newpassword" placeholder="New Password">
-                            </div>
-                            <div class="form-group">
-                              <label for="cnewpassword">Confirm New Password</label>
-                              <input type="password" autocomplete="off" class="form-control form-control-lg"
-                                id="cnewpassword" name="cnewpassword" placeholder="Confirm New Password">
+                            <div class="row">
+                              <!-- <span>
+                                <p>Password Should be:</p>
+                                <ul class="text-warning" style="list-style: circle;">
+                                  <li>minimum of 8 characters in length</li>
+                                  <li>at least one Uppercase letter</li>
+                                  <li>at least one Lowercase letter</li>
+                                  <li>at least one Digit number </li>
+                                  <li>at least one of the following special characters !@#$%^&*- </li>
+                                </ul>
+                              </span> -->
+                              <div class="col-md-12 col-12">
+                                <div class="form-group">
+                                  <label for="current_pass">Current
+                                    Password</label>
+                                  <input type="password" autocomplete="off" name="current_pass"
+                                    class="form-control form-control-lg" id="current_pass"
+                                    placeholder="Enter current password">
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="newpassword">New Password</label>
+                                  <input type="password" autocomplete="off" class="form-control form-control-lg"
+                                    name="newpassword" id="newpassword" placeholder="New Password">
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="cnewpassword">Confirm New Password</label>
+                                  <input type="password" autocomplete="off" class="form-control form-control-lg"
+                                    id="cnewpassword" name="cnewpassword" placeholder="Confirm New Password">
+                                </div>
+                              </div>
                             </div>
                             <input type="hidden" name="action" value="update_admin_acct_pass_">
-                            <input type="hidden" name="uemail" value="<?php echo $admin_data->email; ?>">
-                            <input type="hidden" name="uid" value="<?php echo $admin_data->id; ?>">
+                            <input type="hidden" name="auth_email" value="<?php echo $admin_data->email; ?>">
+                            <input type="hidden" name="auth_uid" value="<?php echo $admin_data->id; ?>">
                             <button type="button" onclick="window.history.back()"
                               class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-circle btn-danger">Back</button>
                             <button type="submit" class="btn btn-info btn-circle float-end _loadingBtn__">Save
@@ -239,6 +258,7 @@ require_once "Helper/helper.php";
       $("._loadingBtn__").html("Loading...").attr("disabled", true);
       $.post("App/Controller/Actions", PASSWORD_UPDATE_FORM.serialize(), (res) => {
         setTimeout(() => {
+          // console.log(res)
           $("._loadingBtn__").html("Save Changes").attr("disabled", false);
           $("#response").html(res);
         }, 1000);
@@ -264,17 +284,13 @@ require_once "Helper/helper.php";
           setTimeout(() => {
             console.log(data);
             $("._loadingBtn____").html('Save Changes').attr("disabled", false);
-
             $("#osotech_response").html(data);
-
           }, 1500);
         }
 
       });
     });
   });
-
-
 
   function previewFile(input) {
     var file = $("#logo-image").get(0).files[0];

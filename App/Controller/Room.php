@@ -6,6 +6,7 @@ class Room
   protected $Core;
   protected $stmt;
   protected $Alert;
+  protected $reponse;
   public function __construct($dbh, $Core, $Alert)
   {
     $this->dbh = $dbh;

@@ -1,4 +1,5 @@
 <?php
+
 class Core
 {
   private PDO $dbh;
@@ -19,11 +20,11 @@ class Core
   {
     if (version_compare(phpversion(), '5.4.0', '<')) {
       if (session_id() == '') {
-        @session_start();
+        session_start();
       }
     } else {
       if (session_status() == PHP_SESSION_NONE) {
-        @session_start();
+        session_start();
       }
     }
   }
@@ -47,11 +48,12 @@ class Core
   public function web_root()
   {
     return "http://localhost/agos-pro/";
+    //return "http://192.168.43.212:8080/agos-pro/";
   }
 
   public function redirect_root($flink)
   {
-    header("Location: " . $this->web_root() . $flink);
+    @header("Location: " . $this->web_root() . $flink);
     exit();
   }
 
@@ -104,7 +106,7 @@ class Core
     $query = "SELECT * FROM `tbl_settings` WHERE `id`=1 LIMIT 1";
     $this->stmt = $this->dbh->prepare($query);
     $this->response = $this->stmt->execute();
-    if ($this->stmt->rowCount() == '1') {
+    if ($this->stmt->rowCount() > 0) {
       $this->response = $this->stmt->fetch();
       return $this->response;
       $this->dbh = null;
@@ -116,7 +118,7 @@ class Core
     $query = "SELECT * FROM `{$table}` WHERE `{$field}`=? LIMIT 1";
     $this->stmt = $this->dbh->prepare($query);
     $this->response = $this->stmt->execute([$value]);
-    if ($this->stmt->rowCount() == '1') {
+    if ($this->stmt->rowCount() > 0) {
       $this->response = $this->stmt->fetch();
       return $this->response;
       $this->dbh = null;
@@ -140,6 +142,20 @@ class Core
     return ($this->response == true) ? true : false;
   }
 
+
+  public function checkUserPasswordSecure($password)
+  {
+    if (!self::isEmptyStr($password)) {
+      if (!preg_match_all('$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$', $password)) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+
   public function move_file_to_folder($filename, $destination): bool
   {
     $this->response = move_uploaded_file($filename, $destination) ? true : false;
@@ -148,7 +164,7 @@ class Core
 
   public function destroy($url)
   {
-    if (@session_destroy()) {
+    if (session_destroy()) {
       self::redirect_root($url);
       exit();
     }
