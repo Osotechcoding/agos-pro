@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 07, 2022 at 01:07 PM
+-- Generation Time: Nov 09, 2022 at 07:10 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 7.4.23
 
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `admin_tbl` (
 --
 
 INSERT INTO `admin_tbl` (`id`, `username`, `email`, `password`, `fullname`, `role_type`, `status`, `verified`, `is_online`, `created_at`) VALUES
-(1, 'Osotech', 'admin@agos.com', '$2y$10$yJXS7SIQ2mGTj6Y9d4ebvO0oeeKwkWGWEsNDsDwjyheaTL9nrsfwy', 'Osotech Samson', 'Admin', 1, 1, 0, '2022-11-02');
+(1, 'Osotech', 'admin@agos.com', '$2y$10$yJXS7SIQ2mGTj6Y9d4ebvO0oeeKwkWGWEsNDsDwjyheaTL9nrsfwy', 'Osotech Samson', 'Admin', 1, 1, 1, '2022-11-02');
 
 -- --------------------------------------------------------
 
@@ -316,10 +316,18 @@ CREATE TABLE IF NOT EXISTS `tbl_settings` (
   `favicon` varchar(255) DEFAULT NULL,
   `logo` varchar(255) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
-  `owner` varchar(255) NOT NULL,
-  `founded_year` date NOT NULL,
+  `owner` varchar(255) DEFAULT NULL,
+  `founded_year` date DEFAULT NULL,
+  `short_name` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_settings`
+--
+
+INSERT INTO `tbl_settings` (`id`, `company_name`, `phone`, `email`, `address`, `country`, `lga`, `state`, `favicon`, `logo`, `url`, `owner`, `founded_year`, `short_name`) VALUES
+(1, 'AGOS EXECUTIVE BUSINESS LOUNGE', '07050723751', 'info@agosoffices.com', '54B, Adeniyi Jones Avenue, Ikeja, Lagos. Nigeria', 'Nigeria', 'Ikeja', 'Lagos State', NULL, 'agos_1667945253.png', 'https://agosoffices.com/', 'AGOS Team', '2022-11-07', 'AGOS ICT');
 
 -- --------------------------------------------------------
 
@@ -335,7 +343,18 @@ CREATE TABLE IF NOT EXISTS `wallet_pins_tbl` (
   `created_at` date NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `wallet_pins_tbl`
+--
+
+INSERT INTO `wallet_pins_tbl` (`id`, `token`, `amount`, `status`, `created_at`) VALUES
+(1, '162231549370', 50000, 0, '2022-11-08'),
+(2, '657151343202', 50000, 0, '2022-11-08'),
+(3, '652151034732', 50000, 0, '2022-11-08'),
+(4, '375229163480', 50000, 0, '2022-11-08'),
+(5, '213416625570', 50000, 0, '2022-11-08');
 
 -- --------------------------------------------------------
 
