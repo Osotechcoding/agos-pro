@@ -193,9 +193,12 @@ class Pin
     $amount = $this->Core->sanitise_string($data['token_amount']);
     $email = $this->Core->sanitise_string($data['customer_email']);
     $cid = $this->Core->sanitise_string($data['customer_id']);
+    $ak = $this->Core->sanitise_string($data['access']);
 
     if ($this->Core->isEmptyStr($amount) || $this->Core->isEmptyStr($email) || $this->Core->isEmptyStr($cid)) {
-      $this->response = $this->Alert->flashMessage("WARNING:", "Invalid Submission!", "error", "top-right");
+      $this->response = $this->Alert->alertMessage("WARNING:", "Invalid Submission!", "danger");
+    } elseif ($ak !== 'msbm2020') {
+      $this->response = $this->Alert->alertMessage("WARNING:", "Invalid Access Key, Pls try again!", "danger");
     } else {
       $balance = (float) $amount;
       $created_at = date("Y-m-d");
@@ -210,15 +213,18 @@ class Pin
           $query = "INSERT INTO `recharge_history` (customer_id,amount,recharge_at,created_at) VALUES (?,?,?,?);";
           $this->stmt = $this->dbh->prepare($query);
           if ($this->stmt->execute([$cid, $balance, $recharge_at, $created_at])) {
-            if (sendTopUpWalletNotificationToCustomer($customer_data->fullname, $customer_data->email, $amount, $recharge_at)) {
+            $wallet_data = $this->Core->getSingleData("wallet_tbl", "customer_id", $cid);
+            $new_balance = $wallet_data->balance;
+            $phone = $customer_data->phone;
+            if (sendTopUpWalletNotificationToCustomer($customer_data->fullname, $customer_data->email, $amount, $new_balance, $phone, $recharge_at)) {
               $this->dbh->commit();
-              $this->response = $this->Alert->flashMessage("SUCCESS:", "Recharge Successful, Notification mail was sent to $email!", "success", "top-right") . $this->Core->pageReload();
+              $this->response = $this->Alert->alertMessage("SUCCESS:", "Recharge Successful, Notification mail was sent to $email!", "success") . $this->Core->pageReload();
             }
           }
         }
       } catch (PDOException $e) {
         $this->dbh->rollback();
-        $this->response = $this->Alert->flashMessage("NOTICE:", "Something went wrong!: " . $e->getMessage(), "error", "top-right");
+        $this->response = $this->Alert->alertMessage("NOTICE:", "Something went wrong!: " . $e->getMessage(), "danger");
       }
     }
     return $this->response;
@@ -245,6 +251,7 @@ class Pin
       } else {
         $token_amount = (int)$token_details->amount;
         $customer_data = $this->Core->getSingleData("customers", "id", $cid);
+
         $created_at = date("Y-m-d");
         $recharge_at = date("Y-m-d H:i:s");
         try {
@@ -259,7 +266,8 @@ class Pin
               $sql = "UPDATE `wallet_pins_tbl` SET `status`='1' WHERE `token`=? LIMIT 1";
               $this->stmt = $this->dbh->prepare($sql);
               if ($this->stmt->execute([$token_card])) {
-                if (sendTopUpWalletNotificationToCustomer($customer_data->fullname, $customer_data->email, $token_amount, $recharge_at)) {
+                $wallet_data = $this->Core->getSingleData("wallet_tbl", "customer_id", $cid);
+                if (sendTopUpWalletNotificationToCustomer($customer_data->fullname, $customer_data->email, $token_amount, $wallet_data->balance, $customer_data->phone, $recharge_at)) {
                   $this->dbh->commit();
                   $this->response = $this->Alert->alertMessage("SUCCESS:", "Recharge Successful, Notification mail was sent to $email!", "success") . $this->Core->pageReload();
                 }

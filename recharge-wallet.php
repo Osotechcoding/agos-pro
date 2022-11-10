@@ -109,7 +109,6 @@ if (isset($_REQUEST['cid']) && isset($_REQUEST['action']) && !$Core->isEmptyStr(
                       } ?>
                     </span>
 
-
                   </div>
                 </div>
               </div>
@@ -119,15 +118,16 @@ if (isset($_REQUEST['cid']) && isset($_REQUEST['action']) && !$Core->isEmptyStr(
             <div class="col-md-12 col-sm-12">
               <div class="card card-box">
                 <div class="card-head">
-                  <header class="text-center">Recharge
-                    <strong><?php echo strtoupper($customer_details->fullname) ?></strong> Wallet
-                  </header>
+                  <h3 class="text-center mb-2 mt-3 text-info">Recharge
+                    <strong><?php echo strtoupper($customer_details->fullname) ?>'s</strong> Wallet
+                  </h3>
                 </div>
                 <div class="card-body" id="bar-parent">
                   <form id="rechargeCustomerTokenForm" class="form-horizontal">
+                    <div class="text-center col-md-6 offset-3" id="response"></div>
                     <div class="form-body">
                       <div class="form-group row">
-                        <label class="control-label col-md-3">Email Address
+                        <label class="control-label col-md-3">Customer Email
                           <span class="required"> * </span>
                         </label>
                         <input type="hidden" name="customer_id" value="<?php echo $customer_details->id; ?>">
@@ -144,6 +144,15 @@ if (isset($_REQUEST['cid']) && isset($_REQUEST['action']) && !$Core->isEmptyStr(
                         <div class="col-md-6">
                           <input type="number" autocomplete="off" name="token_amount" data-required="1"
                             placeholder="Enter amount" class="form-control input-height" />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="control-label col-md-3">Access Key
+                          <span class="required"> msbm2020 </span>
+                        </label>
+                        <div class="col-md-6">
+                          <input type="password" autocomplete="off" name="access" data-required="1"
+                            placeholder="Enter Access Key" class="form-control input-height" />
                         </div>
                       </div>
                       <input type="hidden" name="action" value="_topUpstomerWallet_submit_">
@@ -181,7 +190,7 @@ if (isset($_REQUEST['cid']) && isset($_REQUEST['action']) && !$Core->isEmptyStr(
       $.post("App/Controller/Actions", tokenForm.serialize(), (res) => {
         setTimeout(() => {
           $("._loadingBtn__").html("Recharge Now").attr("disabled", false);
-          $("#server-response").html(res);
+          $("#response").html(res);
         }, 1000);
       })
     })

@@ -28,7 +28,7 @@ class Customer
       $sql = "SELECT * FROM `{$this->table}` WHERE email=? LIMIT 1";
       $this->stmt = $this->dbh->prepare($sql);
       $this->stmt->execute([$email]);
-      if ($this->stmt->rowCount() == '1') {
+      if ($this->stmt->rowCount() > 0) {
         //get the customer details
         $rows = $this->stmt->fetch();
         $db_password = $rows->password;
@@ -116,7 +116,7 @@ class Customer
                 //send booking email to user
                 if (sendReservationBookingInfoToCustomer($customer_data->fullname, $customer_data->email, $ref_code, $checkIn, $checkOut)) {
                   $this->dbh->commit();
-                  $this->response = $this->Alert->flashMessage("SUCCESS:", "Reservation was Successful, Check your inbox at $customer_data->email for details!", "success", "top-right") . $this->Core->accountActivationRedirect("user-dashboard");;
+                  $this->response = $this->Alert->flashMessage("SUCCESS:", "Reservation was Successful, Check your inbox at $customer_data->email for details!", "success", "top-right") . $this->Core->accountActivationRedirect("user-dashboard");
                 }
               }
             }
@@ -325,8 +325,7 @@ class Customer
             }
           } catch (PDOException $e) {
             $this->dbh->rollBack();
-            $this->response =
-              $this->response = $this->Alert->flashMessage("AGOS Says", "Internal Server Error: " . $e->getMessage(), "error", "top-right");
+            $this->response = $this->Alert->flashMessage("AGOS Says", "Internal Server Error: " . $e->getMessage(), "error", "top-right");
           }
         }
       } else {
@@ -386,7 +385,7 @@ class Customer
     $sql = "SELECT * FROM `recharge_history` WHERE customer_id=? ORDER BY id DESC LIMIT 1";
     $this->stmt = $this->dbh->prepare($sql);
     $this->response = $this->stmt->execute([$cid]);
-    if ($this->stmt->rowCount() == '1') {
+    if ($this->stmt->rowCount() > 0) {
       $this->response = $this->stmt->fetch();
       return $this->response;
       $this->dbh = null;
@@ -440,7 +439,7 @@ class Customer
       $sql_query = "SELECT * FROM `{$this->table}` WHERE email=? AND `confirmation_code`=? AND `tokenExp`> NOW() LIMIT 1";
       $this->stmt = $this->dbh->prepare($sql_query);
       $this->stmt->execute([$email, $token]);
-      if ($this->stmt->rowCount() == '1') {
+      if ($this->stmt->rowCount() > 0) {
         //activate the account
         $sql = "UPDATE `{$this->table}` SET `verified`=1,`confirmation_code`='' WHERE email=? AND `confirmation_code`=? LIMIT 1";
         $this->stmt = $this->dbh->prepare($sql);
@@ -531,8 +530,7 @@ class Customer
           }
         } catch (PDOException $e) {
           $this->dbh->rollBack();
-          $this->response =
-            $this->response = $this->Alert->alertMessage("SERVER ERROR", "Internal Server Error: " . $e->getMessage(), "danger");
+          $this->response = $this->Alert->alertMessage("SERVER ERROR", "Internal Server Error: " . $e->getMessage(), "danger");
         }
       } else {
         $this->response = $this->Alert->alertMessage("WARNING:", "We can't find a user with that e-mail address!", "danger");
@@ -570,7 +568,7 @@ class Customer
         }
       } catch (PDOException $e) {
         $this->dbh->rollBack();
-        $this->response = $this->response = $this->Alert->alertMessage("SERVER ERROR", "Internal Server Error: " . $e->getMessage(), "danger");
+        $this->response = $this->Alert->alertMessage("SERVER ERROR", "Internal Server Error: " . $e->getMessage(), "danger");
       }
     }
     return $this->response;
@@ -582,7 +580,7 @@ class Customer
     $sql = "SELECT * FROM `{$this->table}` WHERE `email`=? AND `reset_token`=? LIMIT 1";
     $this->stmt = $this->dbh->prepare($sql);
     $this->stmt->execute([$email, $token]);
-    if ($this->stmt->rowCount() == '1') {
+    if ($this->stmt->rowCount() > 0) {
       $this->response = true;
     } else {
       $this->response = false;

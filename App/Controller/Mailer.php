@@ -17,7 +17,7 @@ function sendConfirmationEmailToNewStaff($fullname, $email, $login_password, $to
   $phpmailer->Password = '5479f82c1922d6';
   $phpmailer->setFrom('admin@agos.com', 'Admin');
   $phpmailer->addAddress($email, $fullname);
-  $phpmailer->Subject = 'User Registration Activation Email';
+  $phpmailer->Subject = 'User Registration Account Activation';
   $phpmailer->isHTML(true);         //Set email format to HTML
   $phpmailer->Body    =
     "Hi, $fullname,\r\n  <b />Thank you for your Registration 
@@ -91,12 +91,16 @@ Contact 08131374443 for any questions.\r\n \r\n Best Regards <b /> <b>AGOS Hotel
   }
 }
 
-function sendTopUpWalletNotificationToCustomer($name, $email, $amount, $date)
+function sendTopUpWalletNotificationToCustomer($name, $email, $amount, $new_balance, $phone, $date)
 {
-  $message_body = "<b>Dear " . $name . "</b>,\r\n\r\n 
-This is to notify you that  your wallet account at AGOS Hotel was Credited with <b> &#8358; " . number_format($amount, 2) . "</b> \r\n\r\n on $date
-by the Admin:\r\n\r\n
-Contact 08131374443 for any questions.\r\n \r\n Best Regards <br /> <b>AGOS Hotel</b>.";
+  $phone = substr($phone, 0, 5) . "***" . substr($phone, -1, 3);
+  $message_body = "<b>Credit: " . $phone . "</b>,<br>\r\n\r\n 
+Amt: <b> &#8358;" . number_format($amount, 2) . "</b><br> \r\n\r\n
+Date: <b>$date </b>\r\n\r\n<br>
+Desc: <b>Online Wallet Recharge</b>\r\n\r\n<br>
+Bal: <b>&#8358;" . number_format($new_balance, 2) . "CR Pay with AGOSWallet</b>
+\r\n\r\n<br>
+Contact <b>info@agosoffices.com</b> for any questions.\r\n \r\n Best Regards <br> <b>AGOS Hotel</b>";
   $phpmailer = new PHPMailer(true);
   $phpmailer->SMTPDebug = 0;
   $phpmailer->isSMTP();
@@ -108,7 +112,7 @@ Contact 08131374443 for any questions.\r\n \r\n Best Regards <br /> <b>AGOS Hote
   $phpmailer->setFrom('admin@agos.com', 'Admin');
   $phpmailer->addAddress($email, $name);
   $phpmailer->addAddress("osotechcoding@gmail.com", "Osotech");
-  $phpmailer->Subject = 'Wallet Credit Alert @ AGOS Hotel';
+  $phpmailer->Subject = 'Wallet Credit Alert';
   $phpmailer->isHTML(true);   //Set email format to HTML
   $phpmailer->Body    = $message_body;
   $phpmailer->AltBody = $message_body;
